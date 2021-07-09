@@ -36,3 +36,5 @@ yarn-error.log*
 
 # frontend mentor
 .project
+
+.vscode

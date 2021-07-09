@@ -1,0 +1,17 @@
+.invoice-storybook {
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .invoice-storybook {
+    padding: 1.5rem 3rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .invoice-storybook {
+    padding: 1.5rem 0;
+    margin: 0 auto;
+    max-width: 730px;
+  }
+}

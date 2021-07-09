@@ -7,8 +7,9 @@ $color-burnt-sienna: hsl(0, 80%, 63%); //#ec5757
 $color-mona-lisa: hsl(0, 100%, 80%); //#ff9797
 
 // Blues
-$color-selago: hsl(231, 73%, 93%); //#Dfe3fa
+$color-selago: hsl(231, 73%, 93%); //#dfe3fa
 $color-bali-hai: hsl(231, 20%, 61%); //#888eb0
+$color-ship-cove: hsl(231, 37%, 63%); //#7e88c3
 $color-ebony-clay: hsl(233, 30%, 21%); //#252945
 $color-mirage: hsl(233, 31%, 17%); //#1e2139
 $color-vulcan: hsl(228, 29%, 7%); //#0c0e16
@@ -20,12 +21,29 @@ $color-heliotrope: hsl(252, 100%, 73%); //#9277ff
 // Neutrals
 $color-whisper: hsl(240, 27%, 98%); //#f8f8fb
 $color-cinder: hsl(233, 30%, 11%); //#141625
-$color-white: hsl(0, 100%, 100%);
+$color-white: hsl(0, 100%, 100%); //#fff
+
+//Shared Values
+$color-purple-accent: $color-cornflower-blue;
 
 //Light Mode
 $color-primary: $color-white;
-$color-secondary: $color-whisper;
+$color-bg: $color-whisper;
+$color-text-primary: $color-vulcan;
+$color-text-secondary: $color-ship-cove;
 
 // Dark Mode
-$color-primary-dark: $color-cinder;
-$color-secondary-dark: $color-mirage;
+$color-primary-dark: $color-mirage;
+$color-bg-dark: $color-cinder;
+$color-text-primary-dark: $color-white;
+$color-text-secondary-dark: $color-selago;
+
+// Breakpoints
+$breakpointMap: (
+  // Small
+  's': (375px),
+  // Medium
+  'm': (768px),
+  // Large
+  'l': (1440px)
+);

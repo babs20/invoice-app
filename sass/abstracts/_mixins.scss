@@ -16,3 +16,15 @@
     #{$property}: #{$light};
   }
 }
+
+@function min-width-for($width-name) {
+  $width: map-get($breakpointMap, $width-name);
+  @return 'min-width: #{$width}';
+}
+
+// Breakpoint Handler
+@mixin respond-to($breakpoint) {
+  @media (min-width-for($breakpoint)) {
+    @content;
+  }
+}
