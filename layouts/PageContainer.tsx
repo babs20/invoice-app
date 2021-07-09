@@ -105,7 +105,7 @@ export const PageContainer = ({
   children: ReactNode;
 }): JSX.Element => {
   return (
-    <div>
+    <div className="page">
       <nav className="navigation">
         <div className="navigation__logo-container">
           <div className="navigation__logo-bg-shape" />
