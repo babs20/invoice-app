@@ -35,5 +35,6 @@ yarn-error.log*
 
 
 # frontend mentor
-invoice-app
-invoice-app-figma
+.project
+
+.vscode

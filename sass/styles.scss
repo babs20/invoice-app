@@ -1,13 +1,16 @@
 @charset 'utf-8';
 
-//Abstracts
+// Abstracts
 @import 'abstracts/__abstracts-dir';
 
-//Base Styles
+// Base Styles
 @import 'base/__base-dir';
 
-//Components
+// Components
 @import 'components/__components-dir';
 
-//Layout
+// Layout
 @import 'layouts/__layouts-dir';
+
+// Pages
+@import 'pages/__pages-dir';

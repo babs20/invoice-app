@@ -1,0 +1,159 @@
+// Invoice Specific Colors
+$hash-color: hsl(231, 36%, 63%);
+$color-blue-light: $color-bali-hai;
+
+// Status Colors
+$paid-green: hsl(160, 67%, 52%);
+$pending-orange: hsl(34, 100%, 50%);
+$draft-gray: hsl(231, 20%, 27%);
+$draft-gray-dark: $color-selago;
+
+// General Typography for Section
+@mixin invoice-typography {
+  font-size: 0.75rem;
+  letter-spacing: -0.25px;
+  line-height: 15px;
+  @include theme('color', $color-text-primary-dark, $color-text-primary);
+}
+
+.invoice {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, auto);
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.100397);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  @include invoice-typography;
+  @include theme('background-color', $color-primary-dark, $color-primary);
+  border: 1px solid transparent;
+
+  &:hover {
+    border: 1px solid $color-purple-accent;
+    cursor: pointer;
+  }
+
+  @include respond-to('m') {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.125rem 1rem 1.5rem;
+  }
+}
+
+.invoice__number {
+  grid-area: 1 / 1 / 2 / 2;
+  font-weight: 700;
+
+  // Add correct color to the hash before the invoice number
+  span {
+    color: $hash-color;
+  }
+}
+
+.invoice__date {
+  grid-area: 2 / 1 / 3 / 2;
+  margin-top: 24px;
+  @include theme('color', $color-text-secondary-dark, $color-text-secondary);
+
+  @include respond-to('m') {
+    margin-top: 0;
+  }
+}
+
+.invoice__client {
+  grid-area: 1 / 2 / 2 / 3;
+  justify-self: end;
+  @include theme('color', $color-text-primary-dark, $color-blue-light);
+}
+
+.invoice__total {
+  grid-area: 3 / 1 / 4 / 2;
+  margin-top: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+  line-height: 24px;
+
+  @include respond-to('m') {
+    margin-top: 0;
+  }
+}
+
+.invoice__status-open-container {
+  display: flex;
+  grid-area: 2 / 2 / 4 / 3;
+  align-items: center;
+  justify-self: end;
+}
+
+.invoice__status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 104px;
+  height: min-content;
+  margin-top: 24px;
+  padding: 13px 0 12px 0;
+  border-radius: 6px;
+
+  font-weight: 700;
+
+  @include respond-to('m') {
+    margin-top: 0;
+  }
+
+  // Status Dot
+  &::before {
+    width: 8px;
+    height: 8px;
+    margin: 0 8px 1px 0;
+    border-radius: 8px;
+
+    content: '';
+  }
+
+  // Variants
+  // transparentize function changes the alpha layer of the main color to 5.71% opacity
+  &--paid {
+    background-color: transparentize($paid-green, (1 - 0.0571));
+    color: $paid-green;
+
+    &::before {
+      background-color: $paid-green;
+    }
+  }
+
+  &--pending {
+    background-color: transparentize($pending-orange, (1 - 0.0571));
+    color: $pending-orange;
+
+    &::before {
+      background-color: $pending-orange;
+    }
+  }
+
+  &--draft {
+    background-color: transparentize($draft-gray, (1 - 0.0571));
+    @include theme('color', $draft-gray-dark, $draft-gray);
+    @include theme(
+      'background-color',
+      transparentize($draft-gray-dark, (1 - 0.0571)),
+      transparentize($draft-gray, (1 - 0.0571))
+    );
+
+    &::before {
+      @include theme('background-color', $draft-gray-dark, $draft-gray);
+    }
+  }
+}
+
+.invoice__open-chevron {
+  display: none;
+
+  @include respond-to('m') {
+    display: block;
+    margin-left: 0.875rem;
+  }
+}

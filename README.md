@@ -32,3 +32,21 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+import React, { ComponentProps } from 'react';
+
+import { Story, Meta } from '@storybook/react';
+
+import Invoice from '../components/Invoice';
+
+//👇 This default export determines where your story goes in the story list
+export default {
+title: 'Invoice',
+component: Invoice,
+} as Meta;
+
+//👇 We create a “template” of how args map to rendering
+const Template: Story<ComponentProps<typeof Invoice>> = () => <Invoice />;
+
+export const Default = Template.bind({});
+Default.args = {};

@@ -1,0 +1,30 @@
+/// Mixin helping to define theme specific values by creating classes
+/// for each theme
+///
+/// @author Brady Blair
+///
+/// @access public
+///
+/// @param {Length} $property - CSS property to use
+/// @param {Length} $dark - CSS Value for Dark Theme
+/// @param {Length} $light - CSS Value for Light Theme
+@mixin theme($property, $dark, $light) {
+  .theme-dark & {
+    #{$property}: #{$dark};
+  }
+  .theme-light & {
+    #{$property}: #{$light};
+  }
+}
+
+@function min-width-for($width-name) {
+  $width: map-get($breakpointMap, $width-name);
+  @return 'min-width: #{$width}';
+}
+
+// Breakpoint Handler
+@mixin respond-to($breakpoint) {
+  @media (min-width-for($breakpoint)) {
+    @content;
+  }
+}
