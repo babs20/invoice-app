@@ -1,0 +1,3 @@
+.invoice {
+  @include theme('background-color', $color-primary-dark, $color-primary);
+}
