@@ -61,6 +61,6 @@ WithRightIcon.args = {
 
 export const WithShowStatus = Template.bind({});
 WithShowStatus.args = {
-  status: 'paid',
+  status: 'pending',
   showStatus: true,
 };
