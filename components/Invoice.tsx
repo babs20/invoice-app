@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
+import InvoiceStatus from './InvoiceStatus';
 interface InvoiceProps {
   id: string;
   paymentDue: string;
@@ -16,9 +17,6 @@ export const Invoice = ({
   clientName,
   total,
 }: InvoiceProps): JSX.Element => {
-  const statusFormatted: string =
-    status.slice(0, 1).toUpperCase() + status.slice(1);
-
   const dayFormatted = (): string => {
     const dateFormat: boolean = dayjs(paymentDue, 'YYYY MM DD').isValid();
 
@@ -27,6 +25,22 @@ export const Invoice = ({
     } else {
       return 'Date Unknown';
     }
+  };
+
+  // Chevron Icon for Medium and Large Breakpoints
+  const ChevronSVG = (): JSX.Element => {
+    return (
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="invoice__open-chevron"
+      >
+        <path d="M6 4L10 8L6 12" stroke="#7C5DFA" strokeWidth="2" />
+      </svg>
+    );
   };
 
   return (
@@ -38,20 +52,8 @@ export const Invoice = ({
       <span className="invoice__date">{`Due ${dayFormatted()}`}</span>
       <span className="invoice__client">{clientName}</span>
       <span className="invoice__total">{`£${total}`}</span>
-      <div className="invoice__status-open-container">
-        <span className={`invoice__status invoice__status--${status}`}>
-          {statusFormatted}
-        </span>
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="invoice__open-chevron"
-        >
-          <path d="M6 4L10 8L6 12" stroke="#7C5DFA" strokeWidth="2" />
-        </svg>
+      <div className="invoice__status-container">
+        <InvoiceStatus status={status} rightIcon={<ChevronSVG />} />
       </div>
     </article>
   );

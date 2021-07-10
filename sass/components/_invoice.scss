@@ -2,12 +2,6 @@
 $hash-color: hsl(231, 36%, 63%);
 $color-blue-light: $color-bali-hai;
 
-// Status Colors
-$paid-green: hsl(160, 67%, 52%);
-$pending-orange: hsl(34, 100%, 50%);
-$draft-gray: hsl(231, 20%, 27%);
-$draft-gray-dark: $color-selago;
-
 // General Typography for Section
 @mixin invoice-typography {
   font-size: 0.75rem;
@@ -81,71 +75,13 @@ $draft-gray-dark: $color-selago;
   }
 }
 
-.invoice__status-open-container {
-  display: flex;
+.invoice__status-container {
   grid-area: 2 / 2 / 4 / 3;
-  align-items: center;
-  justify-self: end;
-}
-
-.invoice__status {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 104px;
-  height: min-content;
   margin-top: 24px;
-  padding: 13px 0 12px 0;
-  border-radius: 6px;
-
-  font-weight: 700;
+  justify-self: end;
 
   @include respond-to('m') {
     margin-top: 0;
-  }
-
-  // Status Dot
-  &::before {
-    width: 8px;
-    height: 8px;
-    margin: 0 8px 1px 0;
-    border-radius: 8px;
-
-    content: '';
-  }
-
-  // Variants
-  // transparentize function changes the alpha layer of the main color to 5.71% opacity
-  &--paid {
-    background-color: transparentize($paid-green, (1 - 0.0571));
-    color: $paid-green;
-
-    &::before {
-      background-color: $paid-green;
-    }
-  }
-
-  &--pending {
-    background-color: transparentize($pending-orange, (1 - 0.0571));
-    color: $pending-orange;
-
-    &::before {
-      background-color: $pending-orange;
-    }
-  }
-
-  &--draft {
-    background-color: transparentize($draft-gray, (1 - 0.0571));
-    @include theme('color', $draft-gray-dark, $draft-gray);
-    @include theme(
-      'background-color',
-      transparentize($draft-gray-dark, (1 - 0.0571)),
-      transparentize($draft-gray, (1 - 0.0571))
-    );
-
-    &::before {
-      @include theme('background-color', $draft-gray-dark, $draft-gray);
-    }
   }
 }
 

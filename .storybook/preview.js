@@ -38,7 +38,7 @@ export const parameters = {
       {
         name: 'dark',
         class: 'theme-dark',
-        color: '#000',
+        color: '#141625',
       },
       {
         name: 'light',
