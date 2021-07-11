@@ -1,0 +1,24 @@
+.invoice-status-storybook {
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+@media (min-width: 768px) {
+  .invoice-status-storybook {
+    padding: 1.5rem 2rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .invoice-status-storybook {
+    max-width: 730px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
+  }
+}
+.theme-dark .invoice-status-storybook {
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: #1e2139;
+}

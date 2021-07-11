@@ -1,0 +1,100 @@
+// Status Text Colors
+$invoice-status-text: hsl(231, 23%, 61%);
+$invoice-status-text-dark: $color-selago;
+
+// Status Icon Colors
+$paid-green: hsl(160, 67%, 52%);
+$pending-orange: hsl(34, 100%, 50%);
+$draft-gray: hsl(231, 20%, 27%);
+$draft-gray-dark: $color-selago;
+
+// For creating a 5.71% opacity on a status BG color
+$bg-alpha-layer-value: (1 - 0.0571);
+
+// General Typography for Section
+@mixin invoice-typography {
+  font-size: 0.75rem;
+  letter-spacing: -0.25px;
+  line-height: 15px;
+  @include theme('color', $color-text-primary-dark, $color-text-primary);
+}
+
+.invoice-status__container {
+  display: flex;
+  align-items: center;
+  @include invoice-typography;
+}
+
+.invoice-status__text-icon-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  @include respond-to('m') {
+    justify-content: flex-start;
+    width: min-content;
+  }
+}
+
+.invoice-status__text {
+  @include theme('color', $invoice-status-text-dark, $invoice-status-text);
+  @include respond-to('m') {
+    margin-right: 1rem;
+  }
+}
+
+.invoice-status__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 104px;
+  height: min-content;
+  padding: 13px 0 12px 0;
+  border-radius: 6px;
+  font-weight: 700;
+
+  // Status Dot
+  &::before {
+    width: 8px;
+    height: 8px;
+    margin: 0 8px 1px 0;
+    border-radius: 8px;
+
+    content: '';
+  }
+
+  // Variants
+  // transparentize function changes the alpha layer of the main color to 5.71% opacity
+  &--paid {
+    background-color: transparentize($paid-green, $bg-alpha-layer-value);
+    color: $paid-green;
+
+    &::before {
+      background-color: $paid-green;
+    }
+  }
+
+  &--pending {
+    background-color: transparentize($pending-orange, $bg-alpha-layer-value);
+    color: $pending-orange;
+
+    &::before {
+      background-color: $pending-orange;
+    }
+  }
+
+  &--draft {
+    background-color: transparentize($draft-gray, $bg-alpha-layer-value);
+    @include theme('color', $draft-gray-dark, $draft-gray);
+    @include theme(
+      'background-color',
+      transparentize($draft-gray-dark, $bg-alpha-layer-value),
+      transparentize($draft-gray, $bg-alpha-layer-value)
+    );
+
+    &::before {
+      @include theme('background-color', $draft-gray-dark, $draft-gray);
+    }
+  }
+}

@@ -1,14 +1,16 @@
 ## Global Layouts / Partials
 
-- PageContainer (layouts/PageContainer.tsx)
+- [x] PageContainer (layouts/PageContainer.tsx)
+
   - NavigationBar
   - ThemeSwitch
-- Form Container (layouts/FormContainer.tsx)
+
+- [ ] Form Container (layouts/FormContainer.tsx)
 
 ## Global Components
 
-- InvoiceStatus (components/InvoiceStatus.tsx)
-- Button (components/Button.tsx)
+- [ ] InvoiceStatus (components/InvoiceStatus.tsx)
+- [ ] Button (components/Button.tsx)
 
 ## Pages
 
