@@ -67,7 +67,9 @@ export const Filter = (): JSX.Element => {
     }
 
     if (event.code === Keys.ArrowDown) {
+      //@ts-ignore
       const nextSibling = event.target.nextSibling;
+      //@ts-ignore
       const firstSibling: HTMLElement | null = event.target.parentElement.querySelector(
         '.filter__option:first-child'
       );
@@ -80,7 +82,9 @@ export const Filter = (): JSX.Element => {
     }
 
     if (event.code === Keys.ArrowUp) {
+      //@ts-ignore
       const previousSibling: HTMLElement | null = event.target.previousSibling;
+      //@ts-ignore
       const lastSibling: HTMLElement | null = event.target.parentElement.querySelector(
         '.filter__option:last-child'
       );
