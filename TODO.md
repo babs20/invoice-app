@@ -9,7 +9,7 @@
 
 ## Global Components
 
-- [ ] InvoiceStatus (components/InvoiceStatus.tsx)
+- [x] InvoiceStatus (components/InvoiceStatus.tsx)
 - [ ] Button (components/Button.tsx)
 
 ## Pages
