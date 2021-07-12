@@ -4,7 +4,7 @@ import { Story, Meta } from '@storybook/react';
 
 import Invoice from '../components/Invoice';
 
-import './invoice.css';
+import './css/invoice.css';
 
 //👇 This default export determines where your story goes in the story list
 export default {

@@ -9,8 +9,8 @@
 
 ## Global Components
 
-- [ ] InvoiceStatus (components/InvoiceStatus.tsx)
-- [ ] Button (components/Button.tsx)
+- [x] InvoiceStatus (components/InvoiceStatus.tsx)
+- [x] Button (components/Button.tsx)
 
 ## Pages
 
@@ -20,22 +20,22 @@
 
 - #### Page Components
 
-  - Invoice
-    (components/Invoice.tsx)
-  - Filter by status (components/InvoiceFilter.tsx)
+  - [x] Invoice
+        (components/Invoice.tsx)
+  - [ ] Filter by status (components/InvoiceFilter.tsx)
 
 ### View Invoice
 
 (pages/ViewInvoice.tsx)
 
 - #### Page Components
-  - InvoiceHeader
-  - InvoicePreview (components/InvoicePreview.tsx)
+  - [ ] InvoiceHeader
+  - [ ] InvoicePreview (components/InvoicePreview.tsx)
     - InvoicePreviewItem
-  - Confirm Delete Modal (components/DeleteModal.tsx)
+  - [ ] Confirm Delete Modal (components/DeleteModal.tsx)
 
 ### Forms
 
-- New Invoice (components/NewInvoiceForm.tsx)
-- Edit Invoice(components/EditInvoice.tsx)
-- Form Elements (components/\*\*.tsx)
+- [ ] New Invoice (components/NewInvoiceForm.tsx)
+- [ ] Edit Invoice(components/EditInvoice.tsx)
+- [ ] Form Elements (components/\*\*.tsx)

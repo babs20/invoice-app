@@ -11,24 +11,17 @@ $draft-gray-dark: $color-selago;
 // For creating a 5.71% opacity on a status BG color
 $bg-alpha-layer-value: (1 - 0.0571);
 
-// General Typography for Section
-@mixin invoice-typography {
-  font-size: 0.75rem;
-  letter-spacing: -0.25px;
-  line-height: 15px;
-  @include theme('color', $color-text-primary-dark, $color-text-primary);
-}
-
 .invoice-status__container {
   display: flex;
   align-items: center;
-  @include invoice-typography;
+  @include theme('color', $color-text-primary-dark, $color-text-primary);
+  @include typography-sm;
 }
 
 .invoice-status__text-icon-container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
 
   @include respond-to('m') {

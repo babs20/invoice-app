@@ -28,3 +28,24 @@
     @content;
   }
 }
+
+// Text
+@mixin typography-sm {
+  font-size: 0.75rem;
+  letter-spacing: -0.25px;
+  line-height: 15px;
+}
+
+// Hover Transition
+@mixin color-smooth {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: ease-in-out;
+  transition-duration: 150ms;
+}
+
+// Hover Transition
+@mixin transform-smooth {
+  transition-property: transform;
+  transition-timing-function: ease-out;
+  transition-duration: 300ms;
+}
