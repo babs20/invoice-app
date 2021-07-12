@@ -4,8 +4,6 @@ import { Story, Meta } from '@storybook/react';
 
 import Button from '../components/Button';
 
-import './css/invoice.css';
-
 //👇 This default export determines where your story goes in the story list
 export default {
   title: 'Button',
