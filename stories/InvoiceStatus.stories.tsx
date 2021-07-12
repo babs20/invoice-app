@@ -3,7 +3,7 @@ import React, { ComponentProps } from 'react';
 import { Story, Meta } from '@storybook/react';
 
 import InvoiceStatus from '../components/InvoiceStatus';
-import './invoice-status.css';
+import './css/invoice-status.css';
 
 const ChevronSVG = (): JSX.Element => {
   return (
