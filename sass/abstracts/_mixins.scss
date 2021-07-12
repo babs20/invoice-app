@@ -35,3 +35,10 @@
   letter-spacing: -0.25px;
   line-height: 15px;
 }
+
+// Hover Transition
+@mixin hover-smooth {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: ease-in-out;
+  transition-duration: 150ms;
+}

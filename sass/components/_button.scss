@@ -1,0 +1,96 @@
+/** 
+** COLORS **
+*/
+
+// Edit
+$color-edit-bg: hsl(231, 67%, 99%);
+$color-edit-bg-dark: hsl(233, 30%, 21%);
+$color-edit-bg--hover: $color-selago;
+$color-edit-bg-dark--hover: $color-white;
+$color-edit-text: $color-ship-cove;
+$color-edit-text-dark: $color-selago;
+
+// Save as Draft
+$color-savedraft-bg: hsl(233, 20%, 27%);
+$color-savedraft-bg--hover: $color-vulcan;
+$color-savedraft-bg-dark--hover: $color-mirage;
+$color-savedraft-text: $color-bali-hai;
+$color-savedraft-text-dark: $color-selago;
+
+// Delete
+$color-destructive-bg: $color-burnt-sienna;
+$color-destructive-bg--hover: $color-mona-lisa;
+
+// Add New Item
+$color-add-new-item-bg: hsl(231, 67%, 99%);
+$color-add-new-item-bg--hover: $color-selago;
+$color-add-new-item-text: $color-ship-cove;
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1.5rem;
+  border-radius: 1.5rem;
+  background-color: $color-cornflower-blue;
+  color: $color-white;
+  font-weight: 700;
+  @include typography-sm;
+  @include hover-smooth;
+
+  &:hover {
+    background-color: $color-heliotrope;
+  }
+
+  // Variants
+  &--with-plus-icon {
+    padding: 0.5rem 1rem 0.5rem 0.5rem;
+  }
+
+  &--edit {
+    @include theme('background-color', $color-edit-bg-dark, $color-edit-bg);
+    @include theme('color', $color-edit-text-dark, $color-edit-text);
+
+    &:hover {
+      @include theme(
+        'background-color',
+        $color-edit-bg-dark--hover,
+        $color-edit-bg--hover
+      );
+      color: $color-edit-text;
+    }
+  }
+
+  &--save-as-draft {
+    background-color: $color-savedraft-bg;
+    @include theme('color', $color-savedraft-text-dark, $color-savedraft-text);
+
+    &:hover {
+      @include theme(
+        'background-color',
+        $color-savedraft-bg-dark--hover,
+        $color-savedraft-bg--hover
+      );
+    }
+  }
+
+  &--destructive {
+    background-color: $color-destructive-bg;
+    &:hover {
+      background-color: $color-destructive-bg--hover;
+    }
+  }
+
+  &--add-new-item {
+    width: 100%;
+    color: $color-add-new-item-text;
+    background-color: $color-add-new-item-bg;
+    &:hover {
+      background-color: $color-add-new-item-bg--hover;
+    }
+  }
+}
+
+.button__circle-plus {
+  margin-right: 1rem;
+}
