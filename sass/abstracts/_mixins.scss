@@ -28,3 +28,10 @@
     @content;
   }
 }
+
+// Text
+@mixin typography-sm {
+  font-size: 0.75rem;
+  letter-spacing: -0.25px;
+  line-height: 15px;
+}

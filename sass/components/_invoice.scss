@@ -7,7 +7,6 @@ $color-blue-light: $color-bali-hai;
   font-size: 0.75rem;
   letter-spacing: -0.25px;
   line-height: 15px;
-  @include theme('color', $color-text-primary-dark, $color-text-primary);
 }
 
 .invoice {
@@ -15,24 +14,25 @@ $color-blue-light: $color-bali-hai;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(3, auto);
   padding: 1.5rem;
+  border: 1px solid transparent;
   border-radius: 8px;
   box-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.100397);
   grid-column-gap: 0px;
   grid-row-gap: 0px;
-  @include invoice-typography;
+  @include typography-sm;
   @include theme('background-color', $color-primary-dark, $color-primary);
-  border: 1px solid transparent;
-
-  &:hover {
-    border: 1px solid $color-purple-accent;
-    cursor: pointer;
-  }
+  @include theme('color', $color-text-primary-dark, $color-text-primary);
 
   @include respond-to('m') {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 1rem 1.125rem 1rem 1.5rem;
+  }
+
+  &:hover {
+    border: 1px solid $color-purple-accent;
+    cursor: pointer;
   }
 }
 
@@ -77,8 +77,8 @@ $color-blue-light: $color-bali-hai;
 
 .invoice__status-container {
   grid-area: 2 / 2 / 4 / 3;
-  margin-top: 24px;
   justify-self: end;
+  margin-top: 24px;
 
   @include respond-to('m') {
     margin-top: 0;
