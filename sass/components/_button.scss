@@ -36,7 +36,7 @@ $color-add-new-item-text: $color-ship-cove;
   color: $color-white;
   font-weight: 700;
   @include typography-sm;
-  @include hover-smooth;
+  @include color-smooth;
 
   &:hover {
     background-color: $color-heliotrope;

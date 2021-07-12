@@ -1,0 +1,84 @@
+.filter {
+  position: relative;
+  width: 12rem;
+  @include typography-sm;
+  @include theme('color', $color-text-primary-dark, $color-text-primary);
+}
+
+.filter__button {
+  display: flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-weight: 700;
+}
+
+.filter__chevron {
+  margin-left: 1rem;
+  @include transform-smooth;
+}
+
+.filter__optionbox {
+  visibility: hidden;
+  position: absolute;
+  width: 100%;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  transform: translateY(0px);
+  @include theme('background-color', $color-ebony-clay, $color-primary);
+  @include transform-smooth;
+
+  &--shown {
+    visibility: visible;
+    transform: translateY(24px);
+  }
+}
+
+.filter__option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  width: min-content;
+  &:not(:first-child) {
+    margin-top: 1rem;
+  }
+}
+
+.filter__input {
+  position: absolute;
+  top: auto;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+
+  &:checked {
+    + .filter__square {
+      background-color: $color-cornflower-blue;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='9' viewBox='0 0 10 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 4.49976L3.62425 6.62402L8.96995 1.27832' stroke='white' stroke-width='2'/%3E%3C/svg%3E%0A");
+      background-position-x: 2px;
+      background-position-y: 3px;
+      background-repeat: no-repeat;
+    }
+  }
+}
+
+.filter__square {
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.125rem;
+  background-color: $color-mirage;
+  @include color-smooth;
+
+  &:hover {
+    border-color: $color-cornflower-blue;
+  }
+}
+
+.filter__label {
+  margin-left: 0.8rem;
+  font-weight: 700;
+  pointer-events: none;
+}
