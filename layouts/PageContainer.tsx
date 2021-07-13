@@ -3,13 +3,17 @@ import { ReactNode, useEffect, useState } from 'react';
 import Theme from '../utils/theme';
 
 const ThemeSwitch = (): JSX.Element => {
-  const [theme, setTheme] = useState<Theme | null>(null);
+  const [theme, setTheme] = useState<Theme | string | null>(null);
 
+  // TODO: Merge function here and _app to share same state
   // Sets the theme state when component is running on the client
   useEffect(() => {
-    setTheme(
-      document.body.classList.contains('theme-dark') ? Theme.DARK : Theme.LIGHT
-    );
+    const userPref: string = window.matchMedia('(prefers-color-scheme: dark)')
+      .matches
+      ? Theme.DARK
+      : Theme.LIGHT;
+
+    setTheme(localStorage.getItem('themePreference') || userPref);
   }, []);
 
   const updateTheme = (): void => {
