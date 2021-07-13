@@ -19,6 +19,10 @@
   @include transform-smooth;
 }
 
+.filter__full-text {
+  @include expand-text('inline');
+}
+
 .filter__optionbox {
   visibility: hidden;
   position: absolute;
