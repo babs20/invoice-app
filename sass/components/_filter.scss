@@ -1,6 +1,13 @@
+// Magic Numbers
+$center-filter-dropdown: -36px;
+$center-filter-dropdown-mobile: -60px;
+
+// Box Shadows
+$box-shadow: 0px 10px 20px rgba(72, 84, 159, 0.25);
+$box-shadow-dark: 0px 10px 20px rgba(0, 0, 0, 0.25);
+
 .filter {
   position: relative;
-  width: 12rem;
   @include typography-sm;
   @include theme('color', $color-text-primary-dark, $color-text-primary);
 }
@@ -26,12 +33,18 @@
 .filter__optionbox {
   visibility: hidden;
   position: absolute;
-  width: 100%;
+  left: $center-filter-dropdown-mobile;
+  width: 12rem;
   padding: 1.5rem;
-  border-radius: 0.5rem;
   transform: translateY(0px);
+  border-radius: 0.5rem;
+  @include theme('box-shadow', $box-shadow-dark, $box-shadow);
   @include theme('background-color', $color-ebony-clay, $color-primary);
   @include transform-smooth;
+
+  @include respond-to('m') {
+    left: $center-filter-dropdown;
+  }
 
   &--shown {
     visibility: visible;
@@ -42,8 +55,8 @@
 .filter__option {
   display: flex;
   align-items: center;
-  cursor: pointer;
   width: min-content;
+  cursor: pointer;
   &:not(:first-child) {
     margin-top: 1rem;
   }
@@ -73,7 +86,9 @@
   height: 1rem;
   border: 1px solid transparent;
   border-radius: 0.125rem;
+
   background-color: $color-mirage;
+  @include theme('background-color', $color-mirage, $color-selago);
   @include color-smooth;
 
   &:hover {

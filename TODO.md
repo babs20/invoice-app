@@ -22,7 +22,7 @@
 
   - [x] Invoice
         (components/Invoice.tsx)
-  - [ ] Filter by status (components/InvoiceFilter.tsx)
+  - [x] Filter by status (components/Filter.tsx)
 
 ### View Invoice
 

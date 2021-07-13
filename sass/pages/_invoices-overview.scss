@@ -1,0 +1,85 @@
+.overview {
+  padding: 2rem 1.5rem;
+
+  @include respond-to('m') {
+    padding: 3.5rem 3rem;
+  }
+
+  @include respond-to('l') {
+    flex: 1;
+    max-width: 730px;
+    margin: 0 auto;
+    padding: 4.5rem 0;
+  }
+}
+
+.overview__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.overview__heading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.63px;
+  line-height: 22.4px;
+  @include theme('color', $color-text-primary-dark, $color-text-primary);
+
+  @include respond-to('m') {
+    font-size: 2rem;
+    letter-spacing: -1px;
+    line-height: 35.84px;
+  }
+}
+
+.overview__sub-heading {
+  display: none;
+  @include typography-sm;
+  @include theme('color', $color-selago, $color-bali-hai);
+
+  @include respond-to('m') {
+    display: block;
+    margin-top: 8px;
+  }
+}
+
+.overview__sub-heading--mobile {
+  margin-top: 4px;
+  @include typography-sm;
+  @include theme('color', $color-selago, $color-bali-hai);
+  @include respond-to('m') {
+    display: none;
+  }
+}
+
+.overview__options {
+  display: flex;
+  align-items: center;
+
+  button:last-child {
+    margin-left: 1.125rem;
+  }
+
+  @include respond-to('m') {
+    button:last-child {
+      margin-left: 2.5rem;
+    }
+  }
+}
+
+.overview__invoice-section {
+  margin-top: 2rem;
+
+  article:not(:first-child) {
+    margin-top: 1rem;
+  }
+
+  @include respond-to('m') {
+    margin-top: 3rem;
+  }
+
+  @include respond-to('l') {
+    margin-top: 4rem;
+  }
+}

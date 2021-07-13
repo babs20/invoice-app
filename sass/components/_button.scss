@@ -92,7 +92,11 @@ $color-add-new-item-text: $color-ship-cove;
 }
 
 .button__circle-plus {
-  margin-right: 1rem;
+  margin-right: 0.5rem;
+
+  @include respond-to('m') {
+    margin-right: 1rem;
+  }
 }
 
 .button__expanded-text {
