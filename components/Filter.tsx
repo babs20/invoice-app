@@ -105,7 +105,9 @@ export const Filter = (): JSX.Element => {
         onClick={() => setIsOpen(!isOpen)}
         onKeyUp={(event) => updateFocusOnEnter(event)}
       >
-        <span>Filter by status</span>
+        <span>
+          Filter <span className="filter__full-text">by status</span>
+        </span>
         <svg
           width="10"
           height="8"
@@ -113,7 +115,7 @@ export const Filter = (): JSX.Element => {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           className="filter__chevron"
-          transform={isOpen ? 'rotate(0)' : 'rotate(180)'}
+          transform={isOpen ? 'rotate(180)' : 'rotate(0)'}
         >
           <path
             d="M9.22778 1.88574L4.99988 6.11364L0.77198 1.88574"
