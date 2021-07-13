@@ -51,7 +51,7 @@ export const Invoice = ({
       </span>
       <span className="invoice__date">{`Due ${dayFormatted()}`}</span>
       <span className="invoice__client">{clientName}</span>
-      <span className="invoice__total">{`£${total}`}</span>
+      <span className="invoice__total">{total}</span>
       <div className="invoice__status-container">
         <InvoiceStatus status={status} rightIcon={<ChevronSVG />} />
       </div>

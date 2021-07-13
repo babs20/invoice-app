@@ -1,19 +1,26 @@
 import classNames from 'classnames';
 import { useState } from 'react';
 import { Keys } from '../utils/keyboard';
+import InvoiceStatus from '../utils/invoice-status';
+interface CheckedType {
+  draft: boolean;
+  pending: boolean;
+  paid: boolean;
+}
 
-export const Filter = (): JSX.Element => {
-  interface CheckedType {
-    draft: boolean;
-    pending: boolean;
-    paid: boolean;
-  }
-  const statusFilters: string[] = ['Draft', 'Pending', 'Paid'];
-  const [checked, setChecked] = useState<CheckedType>({
-    draft: false,
-    pending: false,
-    paid: false,
-  });
+interface FilterProps {
+  checked: CheckedType;
+  setChecked: React.Dispatch<React.SetStateAction<CheckedType>>;
+}
+
+//TODO: Add clickOutside to close modal
+export const Filter = ({ checked, setChecked }: FilterProps): JSX.Element => {
+  const statusFilters: string[] = [
+    InvoiceStatus.DRAFT,
+    InvoiceStatus.PENDING,
+    InvoiceStatus.PAID,
+  ];
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const updateCheckbox = (status: string): void => {
@@ -105,7 +112,9 @@ export const Filter = (): JSX.Element => {
         onClick={() => setIsOpen(!isOpen)}
         onKeyUp={(event) => updateFocusOnEnter(event)}
       >
-        <span>Filter by status</span>
+        <span>
+          Filter <span className="filter__full-text">by status</span>
+        </span>
         <svg
           width="10"
           height="8"
@@ -113,7 +122,7 @@ export const Filter = (): JSX.Element => {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           className="filter__chevron"
-          transform={isOpen ? 'rotate(0)' : 'rotate(180)'}
+          transform={isOpen ? 'rotate(180)' : 'rotate(0)'}
         >
           <path
             d="M9.22778 1.88574L4.99988 6.11364L0.77198 1.88574"
@@ -141,15 +150,16 @@ export const Filter = (): JSX.Element => {
               onKeyDown={(event) => selectWithEnter(event, status)}
             >
               <input
-                id={status.toLowerCase()}
+                id={status}
                 type="checkbox"
                 className="filter__input"
                 checked={checked[status as keyof CheckedType]}
                 tabIndex={-1}
+                onChange={() => updateCheckbox(status)}
               />
               <div className="filter__square" />
-              <label htmlFor={status.toLowerCase()} className="filter__label">
-                {status}
+              <label htmlFor={status} className="filter__label">
+                {status.slice(0, 1).toUpperCase() + status.slice(1)}
               </label>
             </li>
           );

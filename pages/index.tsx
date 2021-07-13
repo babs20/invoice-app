@@ -1,8 +1,10 @@
 import PageContainer from '../layouts/PageContainer';
+import InvoicesOverview from './InvoicesOverview';
+
 export default function Home() {
   return (
     <PageContainer>
-      <h1>Hello</h1>
+      <InvoicesOverview />
     </PageContainer>
   );
 }

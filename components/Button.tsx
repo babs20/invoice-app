@@ -1,6 +1,7 @@
 import classnames from 'classnames';
 interface ButtonProps {
   text: string;
+  expandedText?: string;
   showCirclePlus?: boolean;
   isEdit?: boolean;
   isSaveAsDraft?: boolean;
@@ -30,6 +31,7 @@ const CirclePlusSVG = (): JSX.Element => {
 
 export const Button = ({
   text,
+  expandedText,
   showCirclePlus = false,
   isEdit = false,
   isSaveAsDraft = false,
@@ -47,7 +49,12 @@ export const Button = ({
       })}
     >
       {showCirclePlus && <CirclePlusSVG />}
-      <span>{text}</span>
+      <span>
+        {text}{' '}
+        {expandedText && (
+          <span className="button__expanded-text">{expandedText}</span>
+        )}
+      </span>
     </button>
   );
 };
