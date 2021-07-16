@@ -1,0 +1,5 @@
+.form {
+  position: absolute;
+  inset: 0;
+  @include theme('background-color', $color-bg-dark, $color-bg);
+}
