@@ -1,0 +1,100 @@
+$box-shadow-dialogbox: 0px 10px 20px rgba(72, 84, 159, 0.25);
+$box-shadow-dialogbox-dark: 0px 10px 20px rgba(0, 0, 0, 0.25);
+$color-alpha-layer-value: (1 - 0.0814);
+
+.datepicker {
+  width: 240px;
+}
+
+.datepicker__input-container {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+}
+
+.datepicker__input-label {
+  @include theme('color', $color-selago, $color-ship-cove);
+  @include typography-sm;
+}
+
+.datepicker__input {
+  width: 100%;
+  padding: 1rem 2.5rem 1rem 1rem;
+  border: 1px solid;
+  border-radius: 0.25rem;
+  @include theme('border-color', $color-ebony-clay, $color-selago);
+  @include theme('background-color', $color-mirage, $color-white);
+
+  &::placeholder {
+    font-weight: 700;
+    @include typography-sm;
+    @include theme('color', $color-text-primary-dark, $color-text-primary);
+  }
+}
+
+.datepicker__input-button-container {
+  display: flex;
+  position: relative;
+  align-items: center;
+  margin-top: 0.625rem;
+}
+
+.datepicker__calendar-button {
+  position: absolute;
+  top: 20px;
+  right: 1rem;
+  height: min-content;
+}
+
+.datepicker__dialogbox {
+  margin-top: 1.5rem;
+  padding: 1.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  @include typography-sm;
+  @include theme('color', $color-selago, $color-vulcan);
+  @include theme('background-color', $color-ebony-clay, $color-white);
+  @include theme(
+    'box-shadow',
+    $box-shadow-dialogbox-dark,
+    $box-shadow-dialogbox
+  );
+}
+
+.datepicker__dialogbox-header {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0.5rem;
+}
+
+.datepicker__calendar {
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.datepicker__calendar-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  height: min-content;
+  &:not(:first-child) {
+    margin-top: 1rem;
+  }
+}
+
+.datepicker__date-button {
+  font-weight: 700;
+  width: 100%;
+
+  &:disabled {
+    @include theme(
+      'color',
+      transparentize($color-selago, $bg-alpha-layer-value),
+      transparentize($color-vulcan, $bg-alpha-layer-value)
+    );
+    cursor: not-allowed;
+  }
+
+  &:hover {
+    color: $color-cornflower-blue;
+  }
+}
