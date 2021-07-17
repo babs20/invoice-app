@@ -1,0 +1,12 @@
+.input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border: 1px solid;
+  border-radius: 0.25rem;
+  caret-color: $color-cornflower-blue;
+  font-weight: 700;
+  @include theme('border-color', $color-ebony-clay, $color-selago);
+  @include theme('background-color', $color-mirage, $color-white);
+  @include typography-sm;
+  @include theme('color', $color-text-primary-dark, $color-text-primary);
+}

@@ -1,26 +1,57 @@
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
+import classNames from 'classnames';
+import { Keys } from '../utils/keyboard';
 
 export const DatePicker = (): JSX.Element => {
   const [calendar, setCalendar] = useState({
     month: dayjs().month(),
     year: dayjs().year(),
   });
+  const [isDialogShown, setisDialogShown] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(
+    dayjs().format('YYYY-MM-DD')
+  );
+
   let dateFormatted: string = `${calendar.year}-${calendar.month + 1}`;
 
   const Date = ({
     date,
     isDisabled = false,
+    formattedDate,
   }: {
     date: number;
     isDisabled?: boolean;
+    formattedDate: string;
   }): JSX.Element => {
+    const navigateCalendar = (
+      e: React.KeyboardEvent<HTMLButtonElement>
+    ): void => {
+      if (e.key === Keys.ArrowLeft) {
+        const leftDate = (e.target as HTMLElement)?.parentElement
+          ?.previousSibling?.firstChild;
+        // button (target) => td (parent) => tr (parent) =>
+        // tr (prev sibling) => td (last child) => button (first child)
+        const rowAbove = (e.target as HTMLElement)?.parentElement?.parentElement
+          ?.previousSibling?.lastChild?.firstChild;
+        if (leftDate) {
+          (leftDate as HTMLButtonElement).focus();
+        } else if (rowAbove) {
+          (rowAbove as HTMLButtonElement).focus();
+        }
+      }
+    };
+
     return (
       <td className="datepicker__date-cell">
         <button
-          className="datepicker__date-button"
-          tabIndex={-1}
-          disabled={isDisabled}
+          className={classNames('datepicker__date-button', {
+            'datepicker__date-button--selected': formattedDate === selectedDate,
+          })}
+          tabIndex={formattedDate === selectedDate ? 0 : -1}
+          disabled={false}
+          onClick={() => setSelectedDate(formattedDate)}
+          onKeyDown={(e) => navigateCalendar(e)}
         >
           {date}
         </button>
@@ -45,7 +76,14 @@ export const DatePicker = (): JSX.Element => {
     let startCalendar = previousMonthDays - firstDayOfMonth.day() + 1;
     while (startCalendar <= previousMonthDays) {
       dates.push(
-        <Date date={startCalendar} key={dates.length} isDisabled={true} />
+        <Date
+          date={startCalendar}
+          key={dates.length}
+          isDisabled={true}
+          formattedDate={dayjs(
+            `${calendar.year}-${calendar.month}-${startCalendar}`
+          ).format('YYYY-MM-DD')}
+        />
       );
       startCalendar += 1;
     }
@@ -53,7 +91,15 @@ export const DatePicker = (): JSX.Element => {
     //Main Dates
     let daysToEnable = 1;
     while (daysToEnable <= daysInMonth) {
-      dates.push(<Date date={daysToEnable} key={dates.length} />);
+      dates.push(
+        <Date
+          date={daysToEnable}
+          key={dates.length}
+          formattedDate={dayjs(
+            `${calendar.year}-${calendar.month + 1}-${daysToEnable}`
+          ).format('YYYY-MM-DD')}
+        />
+      );
       daysToEnable += 1;
     }
 
@@ -62,7 +108,14 @@ export const DatePicker = (): JSX.Element => {
       let daysToAdd: number = 1;
       while (dates.length % 7 !== 0) {
         dates.push(
-          <Date date={daysToAdd} key={dates.length} isDisabled={true} />
+          <Date
+            date={daysToAdd}
+            key={dates.length}
+            isDisabled={true}
+            formattedDate={dayjs(
+              `${calendar.year}-${calendar.month + 2}-${daysToAdd}`
+            ).format('YYYY-MM-DD')}
+          />
         );
         daysToAdd += 1;
       }
@@ -77,7 +130,7 @@ export const DatePicker = (): JSX.Element => {
     return <tbody>{rows}</tbody>;
   };
 
-  const previousMonth = (): void => {
+  const goToPreviousMonth = (): void => {
     setCalendar((prev) => {
       return {
         year: prev.month === 1 ? prev.year - 1 : prev.year,
@@ -86,13 +139,24 @@ export const DatePicker = (): JSX.Element => {
     });
   };
 
-  const nextMonth = (): void => {
+  const goToNextMonth = (): void => {
     setCalendar((prev) => {
       return {
         year: prev.month === 12 ? prev.year + 1 : prev.year,
         month: prev.month === 12 ? 1 : prev.month + 1,
       };
     });
+  };
+
+  const openDialogBox = (): void => {
+    setisDialogShown(!isDialogShown);
+    const selectedDate: HTMLButtonElement | null = document.querySelector(
+      '.datepicker__date-button--focus'
+    );
+
+    if (selectedDate) {
+      selectedDate.focus();
+    }
   };
 
   return (
@@ -104,14 +168,17 @@ export const DatePicker = (): JSX.Element => {
         <div className="datepicker__input-button-container">
           <input
             type="text"
-            placeholder="08-21-2021"
+            placeholder={dayjs(selectedDate).format('DD MMM YYYY')}
             id="id-textbox-1"
             aria-autocomplete="none"
             className="datepicker__input"
+            value={dayjs(selectedDate).format('DD MMM YYYY')}
+            readOnly={true}
           />
           <button
             className="datepicker__calendar-button"
             aria-label="Choose Date"
+            onClick={openDialogBox}
           >
             <svg
               width="16"
@@ -132,7 +199,9 @@ export const DatePicker = (): JSX.Element => {
       </div>
       <div
         id="id-datepicker-1"
-        className="datepicker__dialogbox"
+        className={classNames('datepicker__dialogbox', {
+          'datepicker__dialogbox--show': isDialogShown,
+        })}
         role="dialog"
         aria-modal="true"
         aria-labelledby="id-dialog-label"
@@ -141,7 +210,7 @@ export const DatePicker = (): JSX.Element => {
           <button
             className="prevMonth"
             aria-label="previous month"
-            onClick={previousMonth}
+            onClick={goToPreviousMonth}
           >
             <svg
               width="8"
@@ -163,7 +232,7 @@ export const DatePicker = (): JSX.Element => {
           <button
             className="nextMonth"
             aria-label="next month"
-            onClick={nextMonth}
+            onClick={goToNextMonth}
           >
             <svg
               width="8"
