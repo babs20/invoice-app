@@ -24,12 +24,9 @@ $color-alpha-layer-value: (1 - 0.0814);
   border-radius: 0.25rem;
   @include theme('border-color', $color-ebony-clay, $color-selago);
   @include theme('background-color', $color-mirage, $color-white);
-
-  &::placeholder {
-    font-weight: 700;
-    @include typography-sm;
-    @include theme('color', $color-text-primary-dark, $color-text-primary);
-  }
+  font-weight: 700;
+  @include typography-sm;
+  @include theme('color', $color-text-primary-dark, $color-text-primary);
 }
 
 .datepicker__input-button-container {
@@ -41,12 +38,13 @@ $color-alpha-layer-value: (1 - 0.0814);
 
 .datepicker__calendar-button {
   position: absolute;
-  top: 20px;
+  top: 16px;
   right: 1rem;
   height: min-content;
 }
 
 .datepicker__dialogbox {
+  display: none;
   margin-top: 1.5rem;
   padding: 1.5rem 1rem;
   border-radius: 0.5rem;
@@ -59,6 +57,10 @@ $color-alpha-layer-value: (1 - 0.0814);
     $box-shadow-dialogbox-dark,
     $box-shadow-dialogbox
   );
+
+  &--show {
+    display: block;
+  }
 }
 
 .datepicker__dialogbox-header {
@@ -91,10 +93,21 @@ $color-alpha-layer-value: (1 - 0.0814);
       transparentize($color-selago, $bg-alpha-layer-value),
       transparentize($color-vulcan, $bg-alpha-layer-value)
     );
-    cursor: not-allowed;
   }
 
   &:hover {
+    color: $color-ship-cove;
+  }
+
+  &--selected {
     color: $color-cornflower-blue;
+
+    &:hover {
+      color: $color-cornflower-blue;
+    }
+  }
+
+  &--kb-selected {
+    color: $color-ship-cove;
   }
 }
