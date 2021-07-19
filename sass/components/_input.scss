@@ -1,5 +1,11 @@
 .input {
+  display: flex;
+  flex-direction: column;
+}
+
+.input__field {
   width: 100%;
+  margin-top: 0.625rem;
   padding: 1rem 1.25rem;
   border: 1px solid;
   border-radius: 0.25rem;
@@ -9,4 +15,9 @@
   @include theme('background-color', $color-mirage, $color-white);
   @include typography-sm;
   @include theme('color', $color-text-primary-dark, $color-text-primary);
+}
+
+.input__label {
+  @include typography-sm;
+  @include theme('color', $color-bali-hai, $color-ship-cove);
 }

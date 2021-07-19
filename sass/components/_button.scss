@@ -23,6 +23,7 @@ $color-destructive-bg--hover: $color-mona-lisa;
 
 // Add New Item
 $color-add-new-item-bg: hsl(231, 67%, 99%);
+$color-add-new-item-bg-dark: $color-ebony-clay;
 $color-add-new-item-bg--hover: $color-selago;
 $color-add-new-item-text: $color-ship-cove;
 
@@ -35,6 +36,7 @@ $color-add-new-item-text: $color-ship-cove;
   background-color: $color-cornflower-blue;
   color: $color-white;
   font-weight: 700;
+  white-space: nowrap;
   @include typography-sm;
   @include color-smooth;
 
@@ -84,10 +86,19 @@ $color-add-new-item-text: $color-ship-cove;
   &--add-new-item {
     width: 100%;
     color: $color-add-new-item-text;
-    background-color: $color-add-new-item-bg;
+    @include theme(
+      'background-color',
+      $color-add-new-item-bg-dark,
+      $color-add-new-item-bg
+    );
+
     &:hover {
       background-color: $color-add-new-item-bg--hover;
     }
+  }
+
+  &--mini {
+    padding: 1rem 0.85rem;
   }
 }
 

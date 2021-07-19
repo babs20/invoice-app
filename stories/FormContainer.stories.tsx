@@ -2,21 +2,21 @@ import React, { ComponentProps } from 'react';
 
 import { Story, Meta } from '@storybook/react';
 
-import Input from '../components/Input';
+import FormContainer from '../layouts/FormContainer';
 
 //👇 This default export determines where your story goes in the story list
 export default {
-  title: 'Input',
-  component: Input,
+  title: 'FormContainer',
+  component: FormContainer,
+  parameters: {
+    layout: 'fullscreen',
+  },
 } as Meta;
 
 //👇 We create a “template” of how args map to rendering
-const Template: Story<ComponentProps<typeof Input>> = (args) => (
-  <Input {...args} />
+const Template: Story<ComponentProps<typeof FormContainer>> = (args) => (
+  <FormContainer />
 );
 
 export const Default = Template.bind({});
-Default.args = {
-  placeholder: '123 Main Street',
-  name: 'Street Address',
-};
+Default.args = {};
