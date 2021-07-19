@@ -1,16 +1,21 @@
+import classNames from 'classnames';
 interface InputProps {
   placeholder: string;
   name: string;
   type?: string;
+  classes?: string;
 }
 
 export const Input = ({
   placeholder,
   type = 'text',
   name,
+  classes,
 }: InputProps): JSX.Element => {
+  const inputClasses = classNames(`input${classes ? ' ' + classes : ''}`);
+
   return (
-    <div className="input">
+    <div className={inputClasses}>
       <label className="input__label" htmlFor={name}>
         {name}
       </label>

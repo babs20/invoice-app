@@ -8,6 +8,7 @@ interface ButtonProps {
   isDestructive?: boolean;
   isAddNewItem?: boolean;
   isMini?: boolean;
+  type?: 'button' | 'submit' | 'reset' | undefined;
 }
 
 const CirclePlusSVG = (): JSX.Element => {
@@ -39,6 +40,7 @@ export const Button = ({
   isDestructive = false,
   isAddNewItem = false,
   isMini = false,
+  type = 'button',
 }: ButtonProps): JSX.Element => {
   return (
     <button
@@ -50,6 +52,7 @@ export const Button = ({
         'button--add-new-item': isAddNewItem,
         'button--mini': isMini,
       })}
+      type={type}
     >
       {showCirclePlus && <CirclePlusSVG />}
       <span>
