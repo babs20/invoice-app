@@ -17,5 +17,6 @@ const Template: Story<ComponentProps<typeof Input>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-  placeholder: 'Lorem Ipsum Dolor',
+  placeholder: '123 Main Street',
+  name: 'Street Address',
 };
