@@ -7,6 +7,7 @@ interface ButtonProps {
   isSaveAsDraft?: boolean;
   isDestructive?: boolean;
   isAddNewItem?: boolean;
+  isMini?: boolean;
 }
 
 const CirclePlusSVG = (): JSX.Element => {
@@ -37,6 +38,7 @@ export const Button = ({
   isSaveAsDraft = false,
   isDestructive = false,
   isAddNewItem = false,
+  isMini = false,
 }: ButtonProps): JSX.Element => {
   return (
     <button
@@ -46,6 +48,7 @@ export const Button = ({
         'button--save-as-draft': isSaveAsDraft,
         'button--destructive': isDestructive,
         'button--add-new-item': isAddNewItem,
+        'button--mini': isMini,
       })}
     >
       {showCirclePlus && <CirclePlusSVG />}
