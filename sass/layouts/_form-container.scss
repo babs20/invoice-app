@@ -1,24 +1,60 @@
 $color-item-list-title: hsl(225, 14%, 53%);
 $button-container-shadow-dark: 0px 10px 10px -10px rgba(72, 84, 159, 0.100397);
 $button-container-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.100397);
+$color-bg-black-transparent: hsla(0, 0%, 0%, 0.5);
 
 .form {
+  position: absolute;
   height: 100%;
-  padding: 2rem 1.5rem;
   inset: 0;
-  @include theme('background-color', $color-bg-dark, $color-bg);
   @include theme('color', $color-text-primary-dark, $color-text-primary);
+
+  @include respond-to('m') {
+    position: fixed;
+    background-color: $color-bg-black-transparent;
+    overflow-y: hidden;
+    margin-top: 5rem;
+    padding-bottom: 170px;
+  }
+}
+
+.form__container {
+  position: relative;
+  padding-top: 2rem;
+
+  & > * {
+    padding: 0 1.5rem;
+  }
+
+  @include theme('background-color', $color-bg-dark, $color-bg);
+
+  @include respond-to('m') {
+    width: 616px;
+    height: 100%;
+    padding: 2.5rem 0.5rem 1.25rem 3.5rem;
+    overflow-y: scroll;
+    border-radius: 0 1.25rem 0 0;
+    @include scrollbar;
+
+    & > * {
+      padding: 0;
+    }
+  }
 }
 
 .form__go-back {
   display: flex;
   align-items: center;
   font-weight: 700;
-  @include typography-sm;
 
   & :last-child {
     margin-top: 4px;
     margin-left: 1.25rem;
+  }
+  @include typography-sm;
+
+  @include respond-to('m') {
+    display: none;
   }
 }
 
@@ -43,6 +79,13 @@ $button-container-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.100397);
 
   &--item-list {
     margin-top: 4.125rem;
+    margin-bottom: 1.25rem;
+  }
+
+  @include respond-to('m') {
+    &--item-list {
+      margin-top: 1.5rem;
+    }
   }
 }
 
@@ -50,21 +93,6 @@ $button-container-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.100397);
   color: $color-cornflower-blue;
   font-weight: 700;
   @include typography-sm;
-}
-
-.form__invoice-info {
-  margin-top: 2.5rem;
-  & > * {
-    margin-top: 1.5rem;
-  }
-}
-
-.form__item-list {
-  color: $color-item-list-title;
-  font-size: 1.125rem;
-  font-weight: 700;
-  letter-spacing: -0.38px;
-  line-height: 2rem;
 }
 
 .form__location-container {
@@ -76,6 +104,41 @@ $button-container-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.100397);
   & :last-child {
     grid-area: 2 / 1 / 3 / 3;
   }
+
+  @include respond-to('m') {
+    display: flex;
+  }
+}
+
+.form__invoice-info {
+  margin-top: 2.5rem;
+
+  & > * {
+    margin-top: 1.5rem;
+  }
+
+  @include respond-to('m') {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    margin-top: 3rem;
+    gap: 1.5rem;
+    & > * {
+      margin-top: 0rem;
+    }
+
+    & :last-child {
+      grid-area: 2 / 1 / 3 / 3;
+    }
+  }
+}
+
+.form__item-list {
+  color: $color-item-list-title;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.38px;
+  line-height: 2rem;
 }
 
 .form__add-item {
@@ -91,6 +154,43 @@ $button-container-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.100397);
   & :first-child {
     grid-area: 1 / 1 / 2 / 4;
   }
+
+  @include respond-to('m') {
+    display: flex;
+    & > :not(:first-child) {
+      margin-top: 0;
+    }
+  }
+}
+
+.form__item_name {
+  @include respond-to('m') {
+    flex: 1;
+  }
+}
+
+.form__quantity {
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+  @include respond-to('m') {
+    width: 48px;
+    & > input {
+      padding: 1rem 0.25rem;
+      text-align: center;
+    }
+  }
+}
+
+.form__price {
+  @include respond-to('m') {
+    width: 100px;
+  }
 }
 
 .form__item-total-container {
@@ -103,18 +203,26 @@ $button-container-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.100397);
 
 .form__item-amount-container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
 
+  justify-content: space-between;
+
   // Trash Can Icon
-  & svg {
+  & > button {
     margin-bottom: 3px;
+  }
+
+  @include respond-to('m') {
+    & > button {
+      margin-left: 36px;
+    }
   }
 }
 
 .form__item-amount {
-  font-weight: 700;
   padding: 1rem 0;
+
+  font-weight: 700;
 }
 
 .form__button-container {
@@ -123,9 +231,37 @@ $button-container-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.100397);
   margin-top: 4rem;
   padding: 1.5rem;
   box-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.100397);
-  @include theme('background-color', $color-mirage, $color-white);
 
   & :not(:first-child) {
-    margin-left: 7px;
+    margin-left: 8px;
+  }
+
+  @include theme('background-color', $color-mirage, $color-white);
+
+  @include respond-to('m') {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    align-items: center;
+    width: 616px;
+    height: 110px;
+    margin-top: 0;
+    padding: 0 3.5rem 0 3.5rem;
+    box-shadow: 0px -50px 30px 0px rgba(0, 0, 0, 0.3);
+    border-radius: 0 20px 20px 0;
+    @include theme('background-color', $color-mirage, $color-white);
+  }
+}
+
+.form__discard {
+  & > button {
+    padding: 1rem 0.85rem;
+  }
+
+  @include respond-to('m') {
+    flex: 1;
+    & > button {
+      padding: 1rem 1.5rem;
+    }
   }
 }

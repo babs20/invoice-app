@@ -145,9 +145,9 @@ Prevent 'sub' and 'sup' elements from affecting the line height in all browsers.
 
 sub,
 sup {
+  position: relative;
   font-size: 75%;
   line-height: 0;
-  position: relative;
   vertical-align: baseline;
 }
 
@@ -170,8 +170,8 @@ Tabular data
 */
 
 table {
-  text-indent: 0; /* 1 */
   border-color: inherit; /* 2 */
+  text-indent: 0; /* 1 */
 }
 
 /*
@@ -189,10 +189,10 @@ input,
 optgroup,
 select,
 textarea {
+  margin: 0; /* 2 */
   font-family: inherit; /* 1 */
   font-size: 100%; /* 1 */
   line-height: 1.15; /* 1 */
-  margin: 0; /* 2 */
 }
 
 /**
@@ -222,8 +222,8 @@ Remove the inner border and padding in Firefox.
 */
 
 ::-moz-focus-inner {
-  border-style: none;
   padding: 0;
+  border-style: none;
 }
 
 /**
@@ -274,8 +274,8 @@ Correct the cursor style of increment and decrement buttons in Safari.
 */
 
 [type='search'] {
-  -webkit-appearance: textfield; /* 1 */
   outline-offset: -2px; /* 2 */
+  -webkit-appearance: textfield; /* 1 */
 }
 
 /**
@@ -292,8 +292,8 @@ Remove the inner padding in Chrome and Safari on macOS.
 */
 
 ::-webkit-file-upload-button {
-  -webkit-appearance: button; /* 1 */
   font: inherit; /* 2 */
+  -webkit-appearance: button; /* 1 */
 }
 
 /*
@@ -347,9 +347,9 @@ fieldset {
 
 ol,
 ul {
-  list-style: none;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
 /**
@@ -368,8 +368,8 @@ html {
     BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
     sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji'; /* 1 */
-  line-height: 1.5; /* 2 */
   font-weight: 500;
+  line-height: 1.5; /* 2 */
 }
 
 /**
@@ -445,8 +445,8 @@ textarea {
 
 input::placeholder,
 textarea::placeholder {
-  opacity: 1;
   color: #9ca3af;
+  opacity: 1;
 }
 
 button,
@@ -492,8 +492,8 @@ optgroup,
 select,
 textarea {
   padding: 0;
-  line-height: inherit;
   color: inherit;
+  line-height: inherit;
 }
 
 /**
