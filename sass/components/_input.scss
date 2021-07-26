@@ -19,5 +19,5 @@
 
 .input__label {
   @include typography-sm;
-  @include theme('color', $color-bali-hai, $color-ship-cove);
+  @include theme('color', $color-selago, $color-ship-cove);
 }

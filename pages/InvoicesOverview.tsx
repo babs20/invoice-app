@@ -75,7 +75,7 @@ export const InvoicesOverview = (): JSX.Element => {
   };
 
   return (
-    <main className="overview">
+    <main className="overview overview--form-open">
       <header className="overview__header">
         <div className="overview__heading-container">
           <h1 className="overview__heading">Invoices</h1>

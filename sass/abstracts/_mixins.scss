@@ -50,12 +50,34 @@
   transition-duration: 300ms;
 }
 
-
 // Shows a larger text message on medium breakpoint
 @mixin expand-text($display-prop) {
   display: none;
 
   @include respond-to('m') {
     display: #{$display-prop};
+  }
+}
+
+@mixin scrollbar {
+  /* width */
+  &::-webkit-scrollbar {
+    width: 48px;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    border: 20px solid hsla(0, 0%, 0%, 0);
+    border-radius: 32px;
+    background-clip: padding-box;
+    @include theme('background-color', $color-ebony-clay, $color-selago);
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    border: 20px solid hsla(0, 0%, 0%, 0);
+    border-radius: 32px;
+    background-clip: padding-box;
+    background-color: $color-ship-cove;
   }
 }

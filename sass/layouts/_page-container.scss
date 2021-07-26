@@ -2,6 +2,7 @@
 $color-profile-border: hsl(231, 20%, 36%);
 
 .page {
+  position: relative;
   display: flex;
   flex-direction: column;
 
@@ -13,7 +14,6 @@ $color-profile-border: hsl(231, 20%, 36%);
 
 .navigation {
   display: flex;
-  // position: relative;
   align-items: center;
   justify-content: space-between;
   height: 4.5rem;
