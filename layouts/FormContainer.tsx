@@ -3,12 +3,22 @@ import Input from '../components/Input';
 import Button from '../components/Button';
 import { Formik, Form, FieldArray } from 'formik';
 import currency from 'currency.js';
+import { useEffect, useState, Dispatch, SetStateAction } from 'react';
+import classNames from 'classnames';
+
+interface FormContainerProps {
+  isFormOpen: boolean;
+  isFormOpenSet: Dispatch<SetStateAction<boolean>>;
+}
 
 // TODO: Add Responsive Design
 // TODO: Replace calendar with a library and style according
 // TODO: Add drop down element
 // TODO: Integrate into main page usage
-export const FormContainer = (): JSX.Element => {
+export const FormContainer = ({
+  isFormOpen,
+  isFormOpenSet,
+}: FormContainerProps): JSX.Element => {
   interface FormValues {
     id: string;
     createdAt: string;
@@ -79,6 +89,59 @@ export const FormContainer = (): JSX.Element => {
     removeItem: () => void;
   }
 
+  // Change class when scrolled to bottom
+  const [isScrolled, isScrolledSet] = useState<boolean>(false);
+  useEffect(() => {
+    const formContainer: HTMLDivElement | null = document.querySelector(
+      '.form__container'
+    );
+
+    if (formContainer) {
+      const checkScroll = (e: Event): void => {
+        if (e.target) {
+          const element: HTMLDivElement = e.target as HTMLDivElement;
+          const formHeight = formContainer.scrollHeight;
+          const scrollTop = element.scrollTop;
+          const clientHeight = Math.round(
+            element.clientHeight + element.clientHeight * 0.1
+          ); // Fade out 10% above bottom of div
+
+          if (formHeight - Math.abs(scrollTop) <= clientHeight) {
+            isScrolledSet(true);
+          } else if (
+            formHeight - Math.abs(scrollTop) > clientHeight &&
+            isScrolled
+          ) {
+            isScrolledSet(false);
+          }
+        }
+      };
+
+      formContainer.onscroll = checkScroll;
+    }
+  }, [isScrolled]);
+
+  //Check for clicks outside form container
+  useEffect(() => {
+    if (isFormOpen) {
+      const checkForOutsideClick = (e: MouseEvent): void => {
+        const formContainer: HTMLDivElement | null = document.querySelector(
+          '.form__container'
+        );
+
+        if (
+          formContainer &&
+          !formContainer?.contains(e.target as HTMLElement)
+        ) {
+          isFormOpenSet(!isFormOpen);
+          document.removeEventListener('click', checkForOutsideClick);
+        }
+      };
+
+      document.addEventListener('click', checkForOutsideClick);
+    }
+  }, [isFormOpen, isFormOpenSet]);
+
   const NewItem = ({
     index,
     nameVal,
@@ -148,7 +211,7 @@ export const FormContainer = (): JSX.Element => {
       }}
     >
       {(formik) => (
-        <div className="form">
+        <div className={classNames('form', { 'form--is-open': isFormOpen })}>
           <Form className="form__container" onSubmit={formik.handleSubmit}>
             <div className="form__go-back">
               <svg
@@ -285,18 +348,26 @@ export const FormContainer = (): JSX.Element => {
                 </fieldset>
               )}
             />
+            <div
+              className={classNames('form__button-container', {
+                'form__button-container--scrolled': isScrolled,
+              })}
+            >
+              <div className="form__discard">
+                <Button
+                  text="Discard"
+                  isEdit
+                  onClick={() => isFormOpenSet(!isFormOpen)}
+                />
+              </div>
+              <div className="form__draft">
+                <Button text="Save as Draft" isSaveAsDraft />
+              </div>
+              <div className="form__save">
+                <Button text="Save &amp; Send" />
+              </div>
+            </div>
           </Form>
-          <div className="form__button-container">
-            <div className="form__discard">
-              <Button text="Discard" isEdit />
-            </div>
-            <div className="form__draft">
-              <Button text="Save as Draft" isSaveAsDraft />
-            </div>
-            <div className="form__save">
-              <Button text="Save &amp; Send" />
-            </div>
-          </div>
         </div>
       )}
     </Formik>
