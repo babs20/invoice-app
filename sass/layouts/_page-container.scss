@@ -20,6 +20,7 @@ $color-profile-border: hsl(231, 20%, 36%);
   background-color: $color-primary-dark;
 
   @include respond-to('m') {
+    z-index: 1;
     height: 5rem;
   }
 

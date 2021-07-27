@@ -3,10 +3,18 @@ import Button from '../components/Button';
 import Invoice from '../components/Invoice';
 import currency from 'currency.js';
 import data from '../data.json';
-import { useState } from 'react';
+import { SetStateAction, useState, Dispatch } from 'react';
 import InvoiceStatus from '../utils/invoice-status';
 
-export const InvoicesOverview = (): JSX.Element => {
+interface InvoicesOverviewProps {
+  isFormOpen: boolean;
+  isFormOpenSet: Dispatch<SetStateAction<boolean>>;
+}
+
+export const InvoicesOverview = ({
+  isFormOpen,
+  isFormOpenSet,
+}: InvoicesOverviewProps): JSX.Element => {
   type InvoiceType = typeof data[0];
   type FilterType = {
     draft: boolean;
@@ -75,7 +83,7 @@ export const InvoicesOverview = (): JSX.Element => {
   };
 
   return (
-    <main className="overview overview--form-open">
+    <main className="overview">
       <header className="overview__header">
         <div className="overview__heading-container">
           <h1 className="overview__heading">Invoices</h1>
@@ -86,7 +94,12 @@ export const InvoicesOverview = (): JSX.Element => {
         </div>
         <div className="overview__options">
           <Filter checked={checked} setChecked={setChecked} />
-          <Button text="New" expandedText="Invoice" showCirclePlus />
+          <Button
+            text="New"
+            expandedText="Invoice"
+            showCirclePlus
+            onClick={() => isFormOpenSet(!isFormOpen)}
+          />
         </div>
       </header>
       <section className="overview__invoice-section">

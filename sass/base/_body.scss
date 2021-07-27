@@ -1,0 +1,13 @@
+body.theme-light {
+  background-color: $color-bg;
+}
+
+body.theme-dark {
+  background-color: $color-bg-dark;
+}
+
+@include respond-to('m') {
+  .form-open {
+    overflow-y: hidden;
+  }
+}

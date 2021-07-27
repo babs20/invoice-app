@@ -1,9 +1,2 @@
 @import './reset';
-
-body.theme-light {
-  background-color: $color-bg;
-}
-
-body.theme-dark {
-  background-color: $color-bg-dark;
-}
+@import './body';
