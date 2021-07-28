@@ -19,12 +19,13 @@ $color-alpha-layer-value: (1 - 0.0814);
 
 .datepicker__input {
   width: 100%;
+  margin-top: 0.625rem;
   padding: 1rem 2.5rem 1rem 1rem;
   border: 1px solid;
   border-radius: 0.25rem;
+  font-weight: 700;
   @include theme('border-color', $color-ebony-clay, $color-selago);
   @include theme('background-color', $color-mirage, $color-white);
-  font-weight: 700;
   @include typography-sm;
   @include theme('color', $color-text-primary-dark, $color-text-primary);
 }
@@ -47,8 +48,14 @@ $color-alpha-layer-value: (1 - 0.0814);
   display: none;
   margin-top: 1.5rem;
   padding: 1.5rem 1rem;
+
+  border: unset;
   border-radius: 0.5rem;
   font-weight: 700;
+
+  &--show {
+    display: block;
+  }
   @include typography-sm;
   @include theme('color', $color-selago, $color-vulcan);
   @include theme('background-color', $color-ebony-clay, $color-white);
@@ -58,8 +65,15 @@ $color-alpha-layer-value: (1 - 0.0814);
     $box-shadow-dialogbox
   );
 
-  &--show {
-    display: block;
+  // Override React Datepicker Styles
+  & .react-datepicker__header {
+    @include theme('background-color', $color-ebony-clay, $color-white);
+    border: none;
+  }
+
+  // Override React Datepicker Styles
+  & .react-datepicker__day-names {
+    display: none;
   }
 }
 
@@ -67,11 +81,12 @@ $color-alpha-layer-value: (1 - 0.0814);
   display: flex;
   justify-content: space-between;
   margin: 0 0.5rem;
+  @include theme('background-color', $color-ebony-clay, $color-white);
 }
 
 .datepicker__calendar {
-  margin-top: 2rem;
   width: 100%;
+  margin-top: 2rem;
 }
 
 .datepicker__calendar-row {
@@ -84,8 +99,8 @@ $color-alpha-layer-value: (1 - 0.0814);
 }
 
 .datepicker__date-button {
-  font-weight: 700;
   width: 100%;
+  font-weight: 700;
 
   &:disabled {
     @include theme(
@@ -110,4 +125,5 @@ $color-alpha-layer-value: (1 - 0.0814);
   &--kb-selected {
     color: $color-ship-cove;
   }
+  @include theme('color', $color-selago, $color-vulcan);
 }
