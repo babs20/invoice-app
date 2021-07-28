@@ -3,15 +3,15 @@ import Input from '../components/Input';
 import Button from '../components/Button';
 import { Formik, Form, FieldArray } from 'formik';
 import currency from 'currency.js';
-import { useEffect, useState, Dispatch, SetStateAction } from 'react';
+import { useEffect, useState, Dispatch, SetStateAction, useRef } from 'react';
 import classNames from 'classnames';
+import useClickOutside from '../hooks/useClickOutside';
 
 interface FormContainerProps {
   isFormOpen: boolean;
   isFormOpenSet: Dispatch<SetStateAction<boolean>>;
 }
 
-// TODO: Add Responsive Design
 // TODO: Replace calendar with a library and style according
 // TODO: Add drop down element
 // TODO: Integrate into main page usage
@@ -81,13 +81,8 @@ export const FormContainer = ({
     total: 0,
   };
 
-  interface NewItemProps {
-    index: number;
-    nameVal: string;
-    quantityVal: number;
-    priceVal: number;
-    removeItem: () => void;
-  }
+  const containerRef = useRef<HTMLFormElement>(null);
+  useClickOutside(containerRef, isFormOpen, isFormOpenSet);
 
   // Change class when scrolled to bottom
   const [isScrolled, isScrolledSet] = useState<boolean>(false);
@@ -121,26 +116,13 @@ export const FormContainer = ({
     }
   }, [isScrolled]);
 
-  //Check for clicks outside form container
-  useEffect(() => {
-    if (isFormOpen) {
-      const checkForOutsideClick = (e: MouseEvent): void => {
-        const formContainer: HTMLDivElement | null = document.querySelector(
-          '.form__container'
-        );
-
-        if (
-          formContainer &&
-          !formContainer?.contains(e.target as HTMLElement)
-        ) {
-          isFormOpenSet(!isFormOpen);
-          document.removeEventListener('click', checkForOutsideClick);
-        }
-      };
-
-      document.addEventListener('click', checkForOutsideClick);
-    }
-  }, [isFormOpen, isFormOpenSet]);
+  interface NewItemProps {
+    index: number;
+    nameVal: string;
+    quantityVal: number;
+    priceVal: number;
+    removeItem: () => void;
+  }
 
   const NewItem = ({
     index,
@@ -201,6 +183,22 @@ export const FormContainer = ({
     );
   };
 
+  const scrollToBottom = (): void => {
+    const formContainer: HTMLDivElement | null = document.querySelector(
+      '.form__container'
+    );
+
+    // This is a bad way of doing this.
+    setTimeout(() => {
+      if (formContainer) {
+        formContainer.scroll({
+          top: formContainer.scrollHeight,
+          behavior: 'smooth',
+        });
+      }
+    }, 100);
+  };
+
   return (
     <Formik
       initialValues={intialValues}
@@ -212,7 +210,11 @@ export const FormContainer = ({
     >
       {(formik) => (
         <div className={classNames('form', { 'form--is-open': isFormOpen })}>
-          <Form className="form__container" onSubmit={formik.handleSubmit}>
+          <Form
+            className="form__container"
+            onSubmit={formik.handleSubmit}
+            ref={containerRef}
+          >
             <div className="form__go-back">
               <svg
                 width="8"
@@ -336,14 +338,15 @@ export const FormContainer = ({
                   <Button
                     text="+ Add New Item"
                     isAddNewItem
-                    onClick={() =>
+                    onClick={() => {
                       arrayHelpers.push({
                         name: '',
                         quantity: 0,
                         price: 0,
                         total: 0,
-                      })
-                    }
+                      });
+                      scrollToBottom();
+                    }}
                   />
                 </fieldset>
               )}
