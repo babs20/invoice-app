@@ -1,6 +1,6 @@
 $box-shadow-dialogbox: 0px 10px 20px rgba(72, 84, 159, 0.25);
 $box-shadow-dialogbox-dark: 0px 10px 20px rgba(0, 0, 0, 0.25);
-$color-alpha-layer-value: (1 - 0.0814);
+$bg-alpha-layer-value: (1 - 0.2);
 
 .datepicker {
   width: 100%;
@@ -19,75 +19,99 @@ $color-alpha-layer-value: (1 - 0.0814);
 
 .datepicker__input {
   width: 100%;
+  margin-top: 0.625rem;
   padding: 1rem 2.5rem 1rem 1rem;
   border: 1px solid;
   border-radius: 0.25rem;
+  font-weight: 700;
   @include theme('border-color', $color-ebony-clay, $color-selago);
   @include theme('background-color', $color-mirage, $color-white);
-  font-weight: 700;
   @include typography-sm;
   @include theme('color', $color-text-primary-dark, $color-text-primary);
+  background-image: url("data:image/svg+xml,%3Csvg width='48' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg' %3E%3Cpath fillRule='evenodd' clipRule='evenodd' d='M13.3334 2H14C15.1027 2 16 2.89734 16 4V14C16 15.1027 15.1027 16 14 16H2C0.897339 16 0 15.1027 0 14V4C0 2.89734 0.897339 2 2 2H2.66663V0.666626C2.66663 0.298706 2.96533 0 3.33337 0H4C4.36804 0 4.66663 0.298706 4.66663 0.666626V2H11.3334V0.666626C11.3334 0.298706 11.632 0 12 0H12.6666C13.0347 0 13.3334 0.298706 13.3334 0.666626V2ZM14 14.6666C14.3673 14.6666 14.6666 14.3673 14.6666 14V6.69336H1.33337V14C1.33337 14.3673 1.63269 14.6666 2 14.6666H14Z' fill='%237E88C3' /%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position-x: right;
+  background-position-y: 50%;
 }
 
-.datepicker__input-button-container {
-  display: flex;
-  position: relative;
-  align-items: center;
-  margin-top: 0.625rem;
-}
+// .datepicker__input-button-container {
+//   display: flex;
+//   position: relative;
+//   align-items: center;
+//   margin-top: 0.625rem;
+// }
 
-.datepicker__calendar-button {
-  position: absolute;
-  top: 16px;
-  right: 1rem;
-  height: min-content;
-}
+// .datepicker__calendar-button {
+//   position: absolute;
+//   top: 16px;
+//   right: 1rem;
+//   height: min-content;
+// }
 
-.datepicker__dialogbox {
-  display: none;
+div.datepicker__dialogbox {
   margin-top: 1.5rem;
   padding: 1.5rem 1rem;
+
+  border: none;
   border-radius: 0.5rem;
   font-weight: 700;
-  @include typography-sm;
-  @include theme('color', $color-selago, $color-vulcan);
+
+  // Override React Datepicker Styles
+  & .react-datepicker__header {
+    border: none;
+    @include theme('background-color', $color-ebony-clay, $color-white);
+  }
+
+  // Override React Datepicker Styles
+  & .react-datepicker__day-names {
+    display: none;
+  }
+
+  // Override React Datepicker Styles
+  & .react-datepicker__month {
+    margin: 0;
+  }
+
   @include theme('background-color', $color-ebony-clay, $color-white);
   @include theme(
     'box-shadow',
     $box-shadow-dialogbox-dark,
     $box-shadow-dialogbox
   );
-
-  &--show {
-    display: block;
-  }
 }
 
 .datepicker__dialogbox-header {
   display: flex;
   justify-content: space-between;
   margin: 0 0.5rem;
-}
-
-.datepicker__calendar {
-  margin-top: 2rem;
-  width: 100%;
-}
-
-.datepicker__calendar-row {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  height: min-content;
-  &:not(:first-child) {
-    margin-top: 1rem;
-  }
+  @include typography-sm;
+  @include theme('color', $color-selago, $color-vulcan);
+  @include theme('background-color', $color-ebony-clay, $color-white);
 }
 
 .datepicker__date-button {
   font-weight: 700;
-  width: 100%;
 
-  &:disabled {
+  &:hover {
+    @include theme('color', $color-ebony-clay, $color-white);
+    @include theme('background-color', $color-white, $color-ship-cove);
+  }
+
+  // Overide React Datepicker Class
+  &.react-datepicker__day--selected {
+    &:hover {
+      color: $color-cornflower-blue;
+    }
+    @include theme('color', $color-cornflower-blue, $color-cornflower-blue);
+    @include theme('background-color', initial, initial);
+  }
+
+  // Overide React Datepicker Class
+  &.react-datepicker__day--outside-month {
+    &:hover {
+      @include theme('color', $color-ebony-clay, $color-white);
+      @include theme('background-color', $color-white, $color-ship-cove);
+    }
     @include theme(
       'color',
       transparentize($color-selago, $bg-alpha-layer-value),
@@ -95,19 +119,6 @@ $color-alpha-layer-value: (1 - 0.0814);
     );
   }
 
-  &:hover {
-    color: $color-ship-cove;
-  }
-
-  &--selected {
-    color: $color-cornflower-blue;
-
-    &:hover {
-      color: $color-cornflower-blue;
-    }
-  }
-
-  &--kb-selected {
-    color: $color-ship-cove;
-  }
+  @include typography-sm;
+  @include theme('color', $color-selago, $color-vulcan);
 }

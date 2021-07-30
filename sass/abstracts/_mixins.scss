@@ -31,6 +31,8 @@
 
 // Text
 @mixin typography-sm {
+  font-family: 'Spartan', system-ui, -apple-system, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
   font-size: 0.75rem;
   letter-spacing: -0.25px;
   line-height: 15px;
