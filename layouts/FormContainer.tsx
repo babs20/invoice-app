@@ -6,6 +6,7 @@ import currency from 'currency.js';
 import { useEffect, useState, Dispatch, SetStateAction, useRef } from 'react';
 import classNames from 'classnames';
 import useClickOutside from '../hooks/useClickOutside';
+import dayjs from 'dayjs';
 
 interface FormContainerProps {
   isFormOpen: boolean;
@@ -52,7 +53,7 @@ export const FormContainer = ({
   const intialValues: FormValues = {
     id: '',
     createdAt: '',
-    paymentDue: '',
+    paymentDue: dayjs().format('YYYY-MM-DD'),
     description: '',
     paymentTerms: 0,
     clientName: '',
@@ -303,7 +304,7 @@ export const FormContainer = ({
                 />
               </div>
               <div className="form__invoice-info">
-                <DatePicker />
+                <DatePicker name="paymentDue" />
                 <Input
                   name="paymentTerms"
                   placeholder="Next 30 Days"
