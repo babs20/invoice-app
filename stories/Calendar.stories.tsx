@@ -1,4 +1,5 @@
 import React, { ComponentProps } from 'react';
+import { useFormikContext, useField } from 'formik';
 
 import { Story, Meta } from '@storybook/react';
 
@@ -15,8 +16,10 @@ export default {
 
 //👇 We create a “template” of how args map to rendering
 const Template: Story<ComponentProps<typeof DatePicker>> = (args) => (
-  <DatePicker />
+  <DatePicker {...args} />
 );
 
 export const Default = Template.bind({});
-Default.args = {};
+Default.args = {
+  name: 'paymentDue',
+};
