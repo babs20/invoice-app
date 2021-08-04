@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReactDatePicker from 'react-datepicker';
 import dayjs from 'dayjs';
 import { useFormikContext, useField } from 'formik';
@@ -99,6 +99,7 @@ const DatePicker = ({ name }: { name: string }): JSX.Element => {
           popperPlacement={'bottom'}
           showPopperArrow={false}
           onFocus={(e) => (e.target.readOnly = true)}
+          dropdownMode="scroll"
         />
       </div>
     </div>

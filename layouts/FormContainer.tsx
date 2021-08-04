@@ -7,6 +7,7 @@ import { useEffect, useState, Dispatch, SetStateAction, useRef } from 'react';
 import classNames from 'classnames';
 import useClickOutside from '../hooks/useClickOutside';
 import dayjs from 'dayjs';
+import PaymentSelect from '../components/PaymentSelect';
 
 interface FormContainerProps {
   isFormOpen: boolean;
@@ -305,12 +306,13 @@ export const FormContainer = ({
               </div>
               <div className="form__invoice-info">
                 <DatePicker name="paymentDue" />
-                <Input
+                <PaymentSelect name="paymentTerms" />
+                {/* <Input
                   name="paymentTerms"
                   placeholder="Next 30 Days"
                   label="Payment Terms"
                   value={formik.values.paymentTerms}
-                />
+                /> */}
                 <Input
                   name="description"
                   placeholder="Graphic Design"

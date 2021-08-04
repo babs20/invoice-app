@@ -15,8 +15,10 @@ export default {
 
 //👇 We create a “template” of how args map to rendering
 const Template: Story<ComponentProps<typeof FormContainer>> = (args) => (
-  <FormContainer />
+  <FormContainer {...args} />
 );
 
 export const Default = Template.bind({});
-Default.args = {};
+Default.args = {
+  isFormOpen: true,
+};

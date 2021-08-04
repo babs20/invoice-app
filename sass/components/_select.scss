@@ -1,0 +1,65 @@
+.select {
+  display: flex;
+  flex-direction: column;
+}
+
+// 1. To make the input the same height as the other inputs while keeping the contents centered
+.select__control {
+  width: 100%;
+  margin-top: 0.625rem;
+  border: 1px solid;
+  border-radius: 0.25rem;
+  font-weight: 700;
+  padding: 0.342rem 0.6rem; // 1
+
+  &:hover {
+    @include theme('border-color', $color-ebony-clay, $color-selago);
+  }
+
+  @include theme('border-color', $color-ebony-clay, $color-selago);
+  @include theme('background-color', $color-mirage, $color-white);
+}
+
+.select__single-value {
+  @include typography-sm;
+  @include theme('color', $color-text-primary-dark, $color-text-primary);
+}
+
+.select__indicator-separator {
+  display: none;
+}
+
+.select__indicator.select__dropdown-indicator {
+  padding: initial;
+
+  svg {
+    color: $color-cornflower-blue;
+  }
+
+  &:hover {
+    @include theme('color', $color-text-primary-dark, $color-text-primary);
+  }
+}
+
+div.select__menu {
+  margin-top: 1.5rem;
+  border-radius: 0.5rem;
+
+  @include theme('background-color', $color-ebony-clay, $color-white);
+}
+
+div.select__option {
+  padding: 1rem 1.5rem;
+  font-weight: 700;
+  @include typography-sm;
+  @include theme('color', $color-text-primary-dark, $color-text-primary);
+  @include theme('background-color', $color-ebony-clay, $color-white);
+
+  &:not(:last-child) {
+    border-bottom: 1px solid $color-mirage;
+  }
+
+  &--is-focused {
+    @include theme('color', $color-cornflower-blue, $color-text-primary);
+  }
+}
