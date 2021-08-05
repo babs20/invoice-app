@@ -307,12 +307,6 @@ export const FormContainer = ({
               <div className="form__invoice-info">
                 <DatePicker name="paymentDue" />
                 <PaymentSelect name="paymentTerms" />
-                {/* <Input
-                  name="paymentTerms"
-                  placeholder="Next 30 Days"
-                  label="Payment Terms"
-                  value={formik.values.paymentTerms}
-                /> */}
                 <Input
                   name="description"
                   placeholder="Graphic Design"
