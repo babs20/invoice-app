@@ -1,9 +1,12 @@
 import '../sass/styles.scss';
 import type { AppProps } from 'next/app';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Theme from '../utils/theme';
+import PageContainer from '../layouts/PageContainer';
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const [isFormOpen, isFormOpenSet] = useState<boolean>(false);
+
   // Set Theme
   useEffect(() => {
     //Check Local Storage
@@ -32,6 +35,14 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }, []);
 
-  return <Component {...pageProps} />;
+  return (
+    <PageContainer>
+      <Component
+        {...pageProps}
+        isFormOpen={isFormOpen}
+        isFormOpenSet={isFormOpenSet}
+      />
+    </PageContainer>
+  );
 }
 export default MyApp;

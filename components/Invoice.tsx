@@ -2,12 +2,14 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 import InvoiceStatus from './InvoiceStatus';
+import Link from 'next/link';
 interface InvoiceProps {
   id: string;
   paymentDue: string;
   status: string;
   clientName: string;
   total: string;
+  href: string;
 }
 
 export const Invoice = ({
@@ -16,6 +18,7 @@ export const Invoice = ({
   paymentDue,
   clientName,
   total,
+  href,
 }: InvoiceProps): JSX.Element => {
   const dayFormatted = (): string => {
     const dateFormat: boolean = dayjs(paymentDue, 'YYYY MM DD').isValid();
@@ -44,18 +47,20 @@ export const Invoice = ({
   };
 
   return (
-    <article className="invoice">
-      <span className="invoice__number">
-        <span>#</span>
-        {id}
-      </span>
-      <span className="invoice__date">{`Due ${dayFormatted()}`}</span>
-      <span className="invoice__client">{clientName}</span>
-      <span className="invoice__total">{total}</span>
-      <div className="invoice__status-container">
-        <InvoiceStatus status={status} rightIcon={<ChevronSVG />} />
-      </div>
-    </article>
+    <Link href={href} passHref={true}>
+      <article className="invoice" role="link">
+        <span className="invoice__number">
+          <span>#</span>
+          {id}
+        </span>
+        <span className="invoice__date">{`Due ${dayFormatted()}`}</span>
+        <span className="invoice__client">{clientName}</span>
+        <span className="invoice__total">{total}</span>
+        <div className="invoice__status-container">
+          <InvoiceStatus status={status} rightIcon={<ChevronSVG />} />
+        </div>
+      </article>
+    </Link>
   );
 };
 

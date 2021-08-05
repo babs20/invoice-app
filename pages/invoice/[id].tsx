@@ -1,8 +1,11 @@
-import InvoiceStatus from '../components/InvoiceStatus';
-import data from '../data.json';
+import InvoiceStatus from '../../components/InvoiceStatus';
+import data from '../../data.json';
 import dayjs from 'dayjs';
 import currency from 'currency.js';
-import Button from '../components/Button';
+import Button from '../../components/Button';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { GetStaticProps, GetStaticPaths } from 'next';
 
 type InvoiceType = typeof data[0];
 interface ViewInvoiceProps {
@@ -18,6 +21,10 @@ interface Item {
 
 interface InvoiceItemList {
   items: Item[];
+}
+
+interface Path {
+  params: { id: string };
 }
 
 const InvoiceItemList = ({ items }: InvoiceItemList): JSX.Element => {
@@ -61,9 +68,11 @@ const InvoiceItemList = ({ items }: InvoiceItemList): JSX.Element => {
             </th>
           </tr>
         </thead>
-        {items.map((item, index) => {
-          return <InvoiceItem key={index} item={item} />;
-        })}
+        <tbody>
+          {items.map((item, index) => {
+            return <InvoiceItem key={index} item={item} />;
+          })}
+        </tbody>
       </table>
     </div>
   );
@@ -72,22 +81,24 @@ const InvoiceItemList = ({ items }: InvoiceItemList): JSX.Element => {
 export const ViewInvoice = ({ invoice }: ViewInvoiceProps): JSX.Element => {
   return (
     <main className="view">
-      <button type="button" className="view__go-back">
-        <svg
-          width="8"
-          height="10"
-          viewBox="0 0 8 10"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M6.11401 9.22754L1.88611 4.99964L6.11401 0.771736"
-            stroke="#7C5DFA"
-            strokeWidth="2"
-          />
-        </svg>
-        <span>Go back</span>
-      </button>
+      <Link href="/">
+        <a className="view__go-back">
+          <svg
+            width="8"
+            height="10"
+            viewBox="0 0 8 10"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6.11401 9.22754L1.88611 4.99964L6.11401 0.771736"
+              stroke="#7C5DFA"
+              strokeWidth="2"
+            />
+          </svg>
+          <span>Go back</span>
+        </a>
+      </Link>
       <header className="view__header">
         <InvoiceStatus showStatus status={invoice.status} />
         <div className="view__button-container">
@@ -151,3 +162,34 @@ export const ViewInvoice = ({ invoice }: ViewInvoiceProps): JSX.Element => {
 };
 
 export default ViewInvoice;
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const invoices = await data;
+  //@ts-ignore
+  const { id } = context.params;
+  let invoice: InvoiceType = invoices[0];
+
+  for (const i of invoices) {
+    if (i.id === id) {
+      invoice = i;
+    }
+  }
+
+  return {
+    props: { invoice },
+  };
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const invoices = await data;
+
+  const paths: Path[] = [];
+  for (let i = 0; i < invoices.length; i++) {
+    paths.push({ params: { id: invoices[i].id } });
+  }
+
+  return {
+    paths: paths,
+    fallback: false, // See the "fallback" section below
+  };
+};
