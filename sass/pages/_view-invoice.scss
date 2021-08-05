@@ -1,0 +1,306 @@
+@mixin invoice-section {
+  display: flex;
+  flex-direction: column;
+  & > span {
+    margin-top: 0.75rem;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.31px;
+    line-height: 1.25rem;
+    @include theme('color', $color-text-primary-dark, $color-text-primary);
+  }
+}
+
+@mixin address-typography {
+  font-size: 11px;
+  letter-spacing: -0.23px;
+  line-height: 18px;
+}
+
+$color-total-bg: hsl(231, 20%, 27%);
+$color-items-bg: hsl(231, 67%, 99%);
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.view {
+  & > * {
+    margin: 0 1.5rem;
+  }
+  @include theme('color', $color-selago, $color-ship-cove);
+  @include respond-to('l') {
+    flex: 1;
+    max-width: 730px;
+    margin: 0 auto;
+    padding: 4.5rem 0;
+  }
+}
+
+.view__go-back {
+  display: flex;
+  align-items: center;
+  margin-top: 2rem;
+  font-weight: 700;
+
+  // Inner Text
+  & > span {
+    margin-left: 1.25rem;
+  }
+  @include typography-sm;
+}
+
+.view__header {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  @include theme('background-color', $color-mirage, $color-white);
+  @include respond-to('m') {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.view__button-container {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1.5rem;
+  @include theme('background-color', $color-mirage, $color-white);
+
+  @include respond-to('m') {
+    position: relative;
+    justify-content: flex-start;
+    width: min-content;
+    padding: 0;
+
+    & :not(:first-child) {
+      margin-left: 0.5rem;
+    }
+  }
+}
+
+.view__details {
+  margin-top: 1rem;
+  margin-bottom: 151px;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+
+  @include theme('background-color', $color-mirage, $color-white);
+  @include typography-sm;
+  @include respond-to('m') {
+    margin-top: 1.5rem;
+    padding: 2rem;
+  }
+
+  @include respond-to('l') {
+    padding: 3rem;
+  }
+}
+
+.view__top-section {
+  display: flex;
+  flex-direction: column;
+  h2 {
+    font-weight: 700;
+
+    & > span {
+      color: $hash-color;
+    }
+    @include theme('color', $color-text-primary-dark, $color-text-primary);
+  }
+
+  span {
+    margin-top: 0.25rem;
+  }
+  @include respond-to('m') {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.view__id-description {
+  display: flex;
+  flex-direction: column;
+}
+
+.view__id {
+  font-weight: 700;
+
+  & > span {
+    color: $hash-color;
+  }
+  @include theme('color', $color-text-primary-dark, $color-text-primary);
+  @include respond-to('m') {
+    font-size: 1rem;
+    letter-spacing: -0.8px;
+    line-height: 1.5rem;
+  }
+}
+
+.view__description {
+  margin-top: 0.25rem;
+}
+
+.view__address {
+  margin-top: 2rem;
+  @include address-typography;
+  @include respond-to('m') {
+    margin-top: 0;
+    text-align: right;
+  }
+}
+
+.view__invoice-info {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  grid-template-rows: repeat(3, auto);
+  margin-top: 2rem;
+
+  @include respond-to('m') {
+    grid-template-columns: repeat(3, auto);
+    grid-template-rows: auto 1fr;
+  }
+}
+
+.view__invoice-date {
+  grid-area: 1 / 1 / 2 / 2;
+  @include invoice-section;
+}
+
+.view__bill-to {
+  grid-area: 1 / 2 / 3 / 3;
+  @include invoice-section;
+}
+
+.view__bill-to-address {
+  margin-top: 0.5rem;
+  @include address-typography;
+}
+
+.view__payment-due {
+  grid-area: 2 / 1 / 3 / 2;
+  margin-top: 2rem;
+  @include invoice-section;
+}
+
+.view__sent-to {
+  grid-area: 3 / 1 / 4 / 3;
+  margin-top: 2rem;
+  @include invoice-section;
+
+  @include respond-to('m') {
+    grid-area: 1 / 3 / 2 / 4;
+    margin-top: 0;
+  }
+}
+
+.view__items-container {
+  position: relative;
+  padding: 0 1.5rem 1.5rem;
+  margin-top: 2.5rem;
+  border-radius: 0.5rem 0.5rem 0 0;
+  @include theme('background-color', $color-ebony-clay, $color-items-bg);
+
+  @include respond-to('m') {
+    padding: 2rem 2rem 2.5rem 2rem;
+  }
+}
+
+.view__items {
+  width: 100%;
+  font-weight: 700;
+
+  @include theme('color', $color-text-primary-dark, $color-text-primary);
+}
+
+.view__items-headers {
+  display: none;
+
+  @include respond-to('m') {
+    display: table-header-group;
+  }
+}
+
+.view__header-row {
+  & > th {
+    font-weight: 500;
+  }
+}
+
+.view__line-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  & > td {
+    padding-top: 1.5rem;
+  }
+
+  // Hide Middle Children
+  & td:nth-child(2),
+  & td:nth-child(3) {
+    display: none;
+  }
+
+  @include respond-to('m') {
+    display: table-row;
+    // Show Middle Children
+    & td:nth-child(2),
+    & td:nth-child(3) {
+      display: table-cell;
+    }
+
+    & > td {
+      padding-top: 2rem;
+    }
+  }
+}
+
+.view__item-and-quantity {
+  display: flex;
+  flex-direction: column;
+
+  & > span {
+    margin-top: 0.5rem;
+    @include theme('color', $color-bali-hai, $color-ship-cove);
+    @include respond-to('m') {
+      display: none;
+    }
+  }
+}
+
+.view__items-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 1.5rem;
+  border-radius: 0 0 0.5rem 0.5rem;
+  color: $color-white;
+  @include theme('background-color', $color-vulcan, $color-total-bg);
+}
+
+.view__amount-due {
+  font-weight: 500;
+}
+
+.view__total {
+  font-size: 1.25rem;
+  letter-spacing: -0.42px;
+  line-height: 2rem;
+  font-weight: 700;
+}
