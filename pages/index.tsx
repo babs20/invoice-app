@@ -3,9 +3,9 @@ import Button from '../components/Button';
 import Invoice from '../components/Invoice';
 import currency from 'currency.js';
 import { SetStateAction, useState, Dispatch } from 'react';
-// import InvoiceStatus from '../utils/invoice-status';
 import { GetStaticProps } from 'next';
 import { InvoiceArrType, InvoiceType, InvoiceStatus } from '../utils/types';
+import FormContainer from '../layouts/FormContainer';
 
 interface InvoicesOverviewProps {
   isFormOpen: boolean;
@@ -18,6 +18,8 @@ export const InvoicesOverview = ({
   isFormOpenSet,
   invoices,
 }: InvoicesOverviewProps): JSX.Element => {
+  console.log(invoices);
+
   // type InvoiceType = typeof data[0];
   type FilterType = {
     draft: boolean;
@@ -86,43 +88,46 @@ export const InvoicesOverview = ({
   };
 
   return (
-    <main className="overview">
-      <header className="overview__header">
-        <div className="overview__heading-container">
-          <h1 className="overview__heading">Invoices</h1>
-          <h2 className="overview__sub-heading">{subHeadingText(false)}</h2>
-          <h2 className="overview__sub-heading--mobile">
-            {subHeadingText(true)}
-          </h2>
-        </div>
-        <div className="overview__options">
-          <Filter checked={checked} setChecked={setChecked} />
-          <Button
-            text="New"
-            expandedText="Invoice"
-            showCirclePlus
-            onClick={() => isFormOpenSet(!isFormOpen)}
-          />
-        </div>
-      </header>
-      <section className="overview__invoice-section">
-        {filterResults(checked).map(
-          ({ id, status, paymentDue, clientName, total }) => {
-            return (
-              <Invoice
-                key={id}
-                id={id}
-                status={status}
-                paymentDue={paymentDue}
-                clientName={clientName}
-                total={currency(total, { fromCents: true }).format()}
-                href={`/invoice/${id}`}
-              />
-            );
-          }
-        )}
-      </section>
-    </main>
+    <>
+      <FormContainer isFormOpen={isFormOpen} isFormOpenSet={isFormOpenSet} />
+      <main className="overview">
+        <header className="overview__header">
+          <div className="overview__heading-container">
+            <h1 className="overview__heading">Invoices</h1>
+            <h2 className="overview__sub-heading">{subHeadingText(false)}</h2>
+            <h2 className="overview__sub-heading--mobile">
+              {subHeadingText(true)}
+            </h2>
+          </div>
+          <div className="overview__options">
+            <Filter checked={checked} setChecked={setChecked} />
+            <Button
+              text="New"
+              expandedText="Invoice"
+              showCirclePlus
+              onClick={() => isFormOpenSet(!isFormOpen)}
+            />
+          </div>
+        </header>
+        <section className="overview__invoice-section">
+          {filterResults(checked).map(
+            ({ id, status, paymentDue, clientName, total }) => {
+              return (
+                <Invoice
+                  key={id}
+                  id={id}
+                  status={status}
+                  paymentDue={paymentDue}
+                  clientName={clientName}
+                  total={currency(total, { fromCents: true }).format()}
+                  href={`/invoice/${id}`}
+                />
+              );
+            }
+          )}
+        </section>
+      </main>
+    </>
   );
 };
 export default InvoicesOverview;

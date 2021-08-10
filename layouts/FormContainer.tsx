@@ -14,9 +14,6 @@ interface FormContainerProps {
   isFormOpenSet: Dispatch<SetStateAction<boolean>>;
 }
 
-// TODO: Replace calendar with a library and style according
-// TODO: Add drop down element
-// TODO: Integrate into main page usage
 export const FormContainer = ({
   isFormOpen,
   isFormOpenSet,
@@ -51,37 +48,70 @@ export const FormContainer = ({
     total: number;
   }
 
+  // FOR TESTING
   const intialValues: FormValues = {
-    id: '',
-    createdAt: '',
-    paymentDue: dayjs().format('YYYY-MM-DD'),
-    description: '',
-    paymentTerms: 0,
-    clientName: '',
-    clientEmail: '',
-    status: '',
+    id: 'ABC12343',
+    createdAt: dayjs().format('YYYY-MM-DD'),
+    paymentDue: dayjs('08-11-2021').format('YYYY-MM-DD'),
+    description: 'Coding',
+    paymentTerms: 1,
+    clientName: 'John Doe',
+    clientEmail: 'doe@mail.com',
+    status: 'pending',
     senderAddress: {
-      street: '',
-      city: '',
-      postCode: '',
-      country: '',
+      street: '123 Main Street',
+      city: 'New York',
+      postCode: '12345',
+      country: 'United States',
     },
     clientAddress: {
-      street: '',
-      city: '',
-      postCode: '',
-      country: '',
+      street: '19 Union Terrace',
+      city: 'London',
+      postCode: 'E1 3EZ',
+      country: 'United Kingdom',
     },
     items: [
       {
-        name: '',
-        quantity: 0,
-        price: 0,
-        total: 0,
+        name: 'Design',
+        quantity: 1,
+        price: 1000,
+        total: 1000,
       },
     ],
-    total: 0,
+    total: 1000,
   };
+
+  // const intialValues: FormValues = {
+  //   id: '',
+  //   createdAt: '',
+  //   paymentDue: dayjs().format('YYYY-MM-DD'),
+  //   description: '',
+  //   paymentTerms: 0,
+  //   clientName: '',
+  //   clientEmail: '',
+  //   status: '',
+  //   senderAddress: {
+  //     street: '',
+  //     city: '',
+  //     postCode: '',
+  //     country: '',
+  //   },
+  //   clientAddress: {
+  //     street: '',
+  //     city: '',
+  //     postCode: '',
+  //     country: '',
+  //   },
+  //   items: [
+  //     {
+  //       name: '',
+  //       quantity: 0,
+  //       price: 0,
+  //       total: 0,
+  //     },
+  //   ],
+  //   total: 0,
+  // };
 
   const containerRef = useRef<HTMLFormElement>(null);
   useClickOutside(containerRef, isFormOpen, isFormOpenSet);
@@ -154,7 +184,7 @@ export const FormContainer = ({
           name={`items[${index}].price`}
           placeholder="200.00"
           label="Price"
-          value={priceVal}
+          value={currency(priceVal).format()}
           classes="form__price"
         />
         <div className="form__item-total-container">
@@ -204,9 +234,15 @@ export const FormContainer = ({
   return (
     <Formik
       initialValues={intialValues}
-      onSubmit={(values, actions) => {
-        console.log({ values, actions });
-        alert(JSON.stringify(values, null, 2));
+      onSubmit={async (values, actions) => {
+        console.log('values', JSON.stringify(values, null, 2));
+        fetch('http://localhost:3000/api/invoices', {
+          method: 'POST',
+          body: JSON.stringify(values, null, 2),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
         actions.setSubmitting(false);
       }}
     >
@@ -305,7 +341,7 @@ export const FormContainer = ({
                 />
               </div>
               <div className="form__invoice-info">
-                <DatePicker name="paymentDue" />
+                <DatePicker name="createdAt" />
                 <PaymentSelect name="paymentTerms" />
                 <Input
                   name="description"
@@ -364,7 +400,7 @@ export const FormContainer = ({
                 <Button text="Save as Draft" isSaveAsDraft />
               </div>
               <div className="form__save">
-                <Button text="Save &amp; Send" />
+                <Button text="Save &amp; Send" type="submit" />
               </div>
             </div>
           </Form>

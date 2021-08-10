@@ -1,22 +1,12 @@
 require('dotenv').config();
 import * as pgLib from 'pg-promise';
-
-export function createSingleton<T>(name: string, create: () => T): T {
-  const s = Symbol.for(name);
-  let scope = (global as any)[s];
-  if (!scope) {
-    scope = { ...create() };
-    (global as any)[s] = scope;
-  }
-  return scope;
-}
-
-const pgp = require('pg-promise')();
-
+import createSingleton from '../utils/createSingleton';
 interface IDatabaseScope {
   db: pgLib.IDatabase<any>;
   pgp: pgLib.IMain;
 }
+
+const pgp = require('pg-promise')();
 
 const connectionString =
   process.env.DATABASE_URL ||

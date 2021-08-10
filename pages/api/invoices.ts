@@ -1,56 +1,50 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getDB } from '../../db/connectDb';
+import createSingleton from '../../utils/createSingleton';
+import pgPromise from 'pg-promise';
+const { join: joinPath } = require('path');
+const { db, pgp } = getDB();
+interface ISqlQuery {
+  query: pgPromise.QueryFile;
+}
 
-const { db } = getDB();
+// Helper for linking to external query files:
+const sql = (file: string) => {
+  return createSingleton<ISqlQuery>(file, () => {
+    const fullPath = joinPath(__dirname, file);
+    const query = new pgp.QueryFile(fullPath, { minify: true });
+    return { query: query };
+  });
+};
+
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  try {
-    const invoices = await db.any(
-      `SELECT
-      invoices.invoice_id as id,
-      created_at as "createdAt",
-      payment_due as "paymentDue",
-      description as "description",
-      payment_terms as "paymentTerms",
-      users.name as "clientName",
-      users.email as "clientEmail",
-      invoices.status as "status",
-      json_build_object
-        (
-          'street', users.street, 
-          'city', users.city,
-          'postCode', users.post_code,
-          'country', users.country
-        ) as "senderAddress",
-      json_build_object
-        (
-          'street', clients.street, 
-          'city', clients.city,
-          'postCode', clients.post_code,
-          'country', clients.country
-        ) as "clientAddress",
-      array_agg
-      (
-        json_build_object
-        (
-          'name', items.name, 
-          'quantity', items.quantity,
-          'price', items.price,
-          'total', (items.price * items.quantity)
-        )
-      ) as "items",
-      invoices.total
-      FROM invoices
-      JOIN clients ON clients.id = invoices.client_id
-      JOIN users ON users.id = invoices.user_id
-      JOIN items ON items.invoice_id = invoices.id
-      WHERE invoices.user_id = 1
-      GROUP BY invoices.id, clients.id, users.id;
-      `
-    );
+  const { body, method } = req;
 
-    res.status(200).json(invoices);
-  } catch (e) {
-    console.log(e);
+  switch (method) {
+    case 'GET':
+      try {
+        const { query } = sql('../../../../db/queries/getInvoices.sql');
+        const invoices = await db.any(query);
+
+        res.status(200).json(invoices);
+      } catch (e) {
+        if (e instanceof pgp.errors.QueryFileError) {
+          res.status(404);
+          console.log('QUERY FILE ISSUE: ', e);
+        }
+        res.status(404);
+        console.log(e);
+      }
+      break;
+    case 'POST':
+      console.log(body);
+      try {
+        const { query } = sql('../../../../db/queries/putInvoice.sql');
+        const invoice = await db.any(query, { ...body });
+        res.json('test');
+      } catch (e) {
+        console.log(e);
+      }
   }
 };
 
