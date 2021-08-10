@@ -14,7 +14,7 @@ CREATE TABLE "invoices" (
   "description" varchar(255) NOT NULL,
   "payment_terms" smallint NOT NULL,
   "status" invoice_status NOT NULL,
-  "total" integer NOT NULL,
+  "total" bigint NOT NULL,
   "client_id" integer NOT NULL,
   "user_id" integer NOT NULL
 );
@@ -46,8 +46,7 @@ CREATE TABLE "items" (
   "id" serial PRIMARY KEY,
   "name" varchar(255) NOT NULL,
   "quantity" integer NOT NULL,
-  "price" money NOT NULL,
-  "total" money NOT NULL,
+  "price" bigint NOT NULL,
   "invoice_id" integer NOT NULL
 );
 

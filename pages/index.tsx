@@ -2,20 +2,23 @@ import Filter from '../components/Filter';
 import Button from '../components/Button';
 import Invoice from '../components/Invoice';
 import currency from 'currency.js';
-import data from '../data.json';
 import { SetStateAction, useState, Dispatch } from 'react';
-import InvoiceStatus from '../utils/invoice-status';
+// import InvoiceStatus from '../utils/invoice-status';
+import { GetStaticProps } from 'next';
+import { InvoiceArrType, InvoiceType, InvoiceStatus } from '../utils/types';
 
 interface InvoicesOverviewProps {
   isFormOpen: boolean;
   isFormOpenSet: Dispatch<SetStateAction<boolean>>;
+  invoices: InvoiceArrType;
 }
 
 export const InvoicesOverview = ({
   isFormOpen,
   isFormOpenSet,
+  invoices,
 }: InvoicesOverviewProps): JSX.Element => {
-  type InvoiceType = typeof data[0];
+  // type InvoiceType = typeof data[0];
   type FilterType = {
     draft: boolean;
     pending: boolean;
@@ -35,25 +38,25 @@ export const InvoicesOverview = ({
   }: FilterType): Array<InvoiceType> => {
     // If nothing checked give all results
     if (!draft && !pending && !paid) {
-      return data;
+      return invoices;
     }
 
     let results: Array<InvoiceType> = [];
     if (draft) {
       results = results.concat(
-        data.filter((invoice) => invoice.status === InvoiceStatus.DRAFT)
+        invoices.filter((invoice) => invoice.status === InvoiceStatus.DRAFT)
       );
     }
 
     if (pending) {
       results = results.concat(
-        data.filter((invoice) => invoice.status === InvoiceStatus.PENDING)
+        invoices.filter((invoice) => invoice.status === InvoiceStatus.PENDING)
       );
     }
 
     if (paid) {
       results = results.concat(
-        data.filter((invoice) => invoice.status === InvoiceStatus.PAID)
+        invoices.filter((invoice) => invoice.status === InvoiceStatus.PAID)
       );
     }
 
@@ -123,3 +126,12 @@ export const InvoicesOverview = ({
   );
 };
 export default InvoicesOverview;
+
+export const getStaticProps: GetStaticProps = async () => {
+  const res = await fetch('http://localhost:3000/api/invoices');
+  const invoices = await res.json();
+
+  return {
+    props: { invoices },
+  };
+};

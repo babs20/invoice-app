@@ -3,7 +3,6 @@ import data from '../../data.json';
 import dayjs from 'dayjs';
 import currency from 'currency.js';
 import Button from '../../components/Button';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { GetStaticProps, GetStaticPaths } from 'next';
 

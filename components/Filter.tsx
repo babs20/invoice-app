@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useState } from 'react';
 import { Keys } from '../utils/keyboard';
-import InvoiceStatus from '../utils/invoice-status';
+import { InvoiceStatus } from '../utils/types';
 interface CheckedType {
   draft: boolean;
   pending: boolean;
