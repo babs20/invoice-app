@@ -77,13 +77,12 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 'items'
               ) + ' RETURNING name, quantity, price';
 
-            await t.any(itemsQuery);
+            const items = await t.any(itemsQuery);
 
-            return t.batch(invoice);
+            return t.batch(items);
           })
           .then((data) => {
-            console.log(data);
-            res.status(200).json(data);
+            res.status(200).json(JSON.stringify(data));
           })
           .catch((e) => {
             res.status(500);

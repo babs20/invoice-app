@@ -1,28 +1,49 @@
+import { SetStateAction, useState, Dispatch, useEffect } from 'react';
+import { GetStaticProps } from 'next';
+import currency from 'currency.js';
 import Filter from '../components/Filter';
 import Button from '../components/Button';
 import Invoice from '../components/Invoice';
-import currency from 'currency.js';
-import { SetStateAction, useState, Dispatch } from 'react';
-import { GetStaticProps } from 'next';
-import { InvoiceArrType, InvoiceType, InvoiceStatus } from '../utils/types';
 import FormContainer from '../layouts/FormContainer';
+import {
+  InvoiceArrType,
+  InvoiceType,
+  InvoiceStatus,
+  State,
+  Action,
+  ActionTypes,
+} from '../utils/types';
 
 interface InvoicesOverviewProps {
   isFormOpen: boolean;
   isFormOpenSet: Dispatch<SetStateAction<boolean>>;
-  invoices: InvoiceArrType;
+  staticInvoices: InvoiceArrType;
+  state: State;
+  dispatch: React.Dispatch<Action>;
 }
 
+type FilterType = {
+  draft: boolean;
+  pending: boolean;
+  paid: boolean;
+};
+
 export const InvoicesOverview = ({
+  state,
+  dispatch,
   isFormOpen,
   isFormOpenSet,
-  invoices,
+  staticInvoices,
 }: InvoicesOverviewProps): JSX.Element => {
-  type FilterType = {
-    draft: boolean;
-    pending: boolean;
-    paid: boolean;
-  };
+  useEffect(() => {
+    dispatch({
+      type: ActionTypes.InitializeInvoices,
+      payload: {
+        invoices: staticInvoices,
+      },
+    });
+  }, [staticInvoices, dispatch]);
+  const { invoices } = state;
 
   const [checked, setChecked] = useState({
     draft: false,
@@ -86,7 +107,12 @@ export const InvoicesOverview = ({
 
   return (
     <>
-      <FormContainer isFormOpen={isFormOpen} isFormOpenSet={isFormOpenSet} />
+      <FormContainer
+        isFormOpen={isFormOpen}
+        isFormOpenSet={isFormOpenSet}
+        state={state}
+        dispatch={dispatch}
+      />
       <main className="overview">
         <header className="overview__header">
           <div className="overview__heading-container">
@@ -133,9 +159,9 @@ export default InvoicesOverview;
 
 export const getStaticProps: GetStaticProps = async () => {
   const res = await fetch('http://localhost:3000/api/invoices');
-  const invoices = await res.json();
+  const staticInvoices = await res.json();
 
   return {
-    props: { invoices },
+    props: { staticInvoices },
   };
 };

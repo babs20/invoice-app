@@ -1,20 +1,24 @@
 import DatePicker from '../components/DatePicker';
 import Input from '../components/Input';
 import Button from '../components/Button';
-import { Formik, Form, FieldArray } from 'formik';
-import currency from 'currency.js';
+import { Formik, Form, FieldArray, FormikHelpers } from 'formik';
 import { useEffect, useState, Dispatch, SetStateAction, useRef } from 'react';
 import classNames from 'classnames';
 import useClickOutside from '../hooks/useClickOutside';
 import dayjs from 'dayjs';
 import PaymentSelect from '../components/PaymentSelect';
+import { ActionTypes, State, Action, InvoiceStatus } from '../utils/types';
 
 interface FormContainerProps {
   isFormOpen: boolean;
   isFormOpenSet: Dispatch<SetStateAction<boolean>>;
+  state: State;
+  dispatch: React.Dispatch<Action>;
 }
 
 export const FormContainer = ({
+  state,
+  dispatch,
   isFormOpen,
   isFormOpenSet,
 }: FormContainerProps): JSX.Element => {
@@ -23,10 +27,10 @@ export const FormContainer = ({
     createdAt: string;
     paymentDue: string;
     description: string;
-    paymentTerms: number;
+    paymentTerms: 1 | 7 | 14 | 30;
     clientName: string;
     clientEmail: string;
-    status: string;
+    status: InvoiceStatus | string;
     senderAddress: {
       street: string;
       city: string;
@@ -214,6 +218,45 @@ export const FormContainer = ({
     );
   };
 
+  const formSubmit = async (
+    values: FormValues,
+    actions: FormikHelpers<FormValues>
+  ) => {
+    const items = values.items.map((item) => {
+      return {
+        ...item,
+        total: item.total * 100,
+        price: item.price * 100,
+      };
+    });
+
+    const normalizedValues = {
+      ...values,
+      id: Math.random().toString(36).substr(2, 6).toUpperCase(),
+      total: values.total * 100,
+    };
+
+    await fetch('http://localhost:3000/api/invoices', {
+      method: 'POST',
+      body: JSON.stringify(normalizedValues, null, 2),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then(() => {
+        dispatch({
+          type: ActionTypes.AddInvoice,
+          payload: { addInvoice: { ...normalizedValues, items } },
+        });
+      });
+
+    actions.setSubmitting(false);
+    isFormOpenSet(!isFormOpen);
+  };
+
   const scrollToBottom = (): void => {
     const formContainer: HTMLDivElement | null = document.querySelector(
       '.form__container'
@@ -233,22 +276,7 @@ export const FormContainer = ({
   return (
     <Formik
       initialValues={intialValues}
-      onSubmit={async (values, actions) => {
-        const normalizedValues = {
-          ...values,
-          id: Math.random().toString(36).substr(2, 6).toUpperCase(),
-          total: values.total * 100,
-        };
-        fetch('http://localhost:3000/api/invoices', {
-          method: 'POST',
-          body: JSON.stringify(normalizedValues, null, 2),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        actions.setSubmitting(false);
-        isFormOpenSet(!isFormOpen);
-      }}
+      onSubmit={(values, actions) => formSubmit(values, actions)}
     >
       {(formik) => (
         <div className={classNames('form', { 'form--is-open': isFormOpen })}>

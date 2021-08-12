@@ -12,7 +12,7 @@ export interface InvoiceType {
   paymentTerms: 1 | 7 | 14 | 30;
   clientName: string;
   clientEmail: string;
-  status: InvoiceStatus;
+  status: InvoiceStatus | string;
   senderAddress: {
     street: string;
     city: string;
@@ -35,3 +35,20 @@ export interface InvoiceType {
 }
 
 export type InvoiceArrType = InvoiceType[];
+
+export interface State {
+  invoices: InvoiceType[];
+}
+
+export enum ActionTypes {
+  AddInvoice = 'ADD_INVOICE',
+  InitializeInvoices = 'INIT_INVOICES',
+}
+
+export interface Action {
+  type: ActionTypes;
+  payload: {
+    addInvoice?: InvoiceType;
+    invoices?: InvoiceArrType;
+  };
+}

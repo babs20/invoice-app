@@ -3,9 +3,11 @@ import type { AppProps } from 'next/app';
 import { useState, useEffect } from 'react';
 import Theme from '../utils/theme';
 import PageContainer from '../layouts/PageContainer';
+import useApplicationData from '../hooks/useApplicationData';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [isFormOpen, isFormOpenSet] = useState<boolean>(false);
+  const { state, dispatch } = useApplicationData();
 
   // Set Theme
   useEffect(() => {
@@ -51,6 +53,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         {...pageProps}
         isFormOpen={isFormOpen}
         isFormOpenSet={isFormOpenSet}
+        state={state}
+        dispatch={dispatch}
       />
     </PageContainer>
   );
