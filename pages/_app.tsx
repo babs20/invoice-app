@@ -35,6 +35,16 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }, []);
 
+  // Update Body Class
+  useEffect(() => {
+    if (isFormOpen) {
+      window.scroll(0, 0);
+      document.body.classList.add('form-open');
+    } else {
+      document.body.classList.remove('form-open');
+    }
+  }, [isFormOpen, isFormOpenSet]);
+
   return (
     <PageContainer>
       <Component

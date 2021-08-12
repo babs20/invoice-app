@@ -20,7 +20,7 @@ class MyDocument extends Document {
             rel="stylesheet"
           />
         </Head>
-        <body className="form-open">
+        <body>
           <Main />
           <NextScript />
         </body>

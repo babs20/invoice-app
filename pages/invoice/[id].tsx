@@ -1,12 +1,11 @@
-import InvoiceStatus from '../../components/InvoiceStatus';
-import data from '../../data.json';
 import dayjs from 'dayjs';
 import currency from 'currency.js';
-import Button from '../../components/Button';
 import Link from 'next/link';
 import { GetStaticProps, GetStaticPaths } from 'next';
+import InvoiceStatus from '../../components/InvoiceStatus';
+import Button from '../../components/Button';
+import { InvoiceType } from '../../utils/types';
 
-type InvoiceType = typeof data[0];
 interface ViewInvoiceProps {
   invoice: InvoiceType;
 }
@@ -163,7 +162,9 @@ export const ViewInvoice = ({ invoice }: ViewInvoiceProps): JSX.Element => {
 export default ViewInvoice;
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const invoices = await data;
+  const res = await fetch('http://localhost:3000/api/invoices');
+  const invoices = await res.json();
+
   //@ts-ignore
   const { id } = context.params;
   let invoice: InvoiceType = invoices[0];
@@ -180,7 +181,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const invoices = await data;
+  const res = await fetch('http://localhost:3000/api/invoices');
+  const invoices = await res.json();
 
   const paths: Path[] = [];
   for (let i = 0; i < invoices.length; i++) {

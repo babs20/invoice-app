@@ -8,6 +8,7 @@ $color-bg-black-transparent: hsla(0, 0%, 0%, 0.5);
   position: absolute;
   height: 100%;
   inset: 0;
+  z-index: 1;
 
   &--is-open {
     display: block;

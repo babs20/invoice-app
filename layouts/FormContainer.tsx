@@ -50,9 +50,9 @@ export const FormContainer = ({
 
   // FOR TESTING
   const intialValues: FormValues = {
-    id: 'ABC12343',
+    id: '',
     createdAt: dayjs().format('YYYY-MM-DD'),
-    paymentDue: dayjs('08-11-2021').format('YYYY-MM-DD'),
+    paymentDue: dayjs().add(1, 'day').format('YYYY-MM-DD'),
     description: 'Coding',
     paymentTerms: 1,
     clientName: 'John Doe',
@@ -74,11 +74,11 @@ export const FormContainer = ({
       {
         name: 'Design',
         quantity: 1,
-        price: 1000,
-        total: 1000,
+        price: 1550,
+        total: 1550,
       },
     ],
-    total: 1000,
+    total: 1550,
   };
 
   // const intialValues: FormValues = {
@@ -184,15 +184,14 @@ export const FormContainer = ({
           name={`items[${index}].price`}
           placeholder="200.00"
           label="Price"
-          value={currency(priceVal).format()}
+          value={priceVal}
           classes="form__price"
         />
         <div className="form__item-total-container">
           <h3>Total</h3>
           <div className="form__item-amount-container">
-            <span className="form__item-amount">
-              {currency(quantityVal * priceVal).format()}
-            </span>
+            <span className="form__item-amount">$</span>
+            <span className="form__item-amount">{priceVal * quantityVal}</span>
             <button type="button" onClick={removeItem}>
               <svg
                 width="13"
@@ -235,15 +234,20 @@ export const FormContainer = ({
     <Formik
       initialValues={intialValues}
       onSubmit={async (values, actions) => {
-        console.log('values', JSON.stringify(values, null, 2));
+        const normalizedValues = {
+          ...values,
+          id: Math.random().toString(36).substr(2, 6).toUpperCase(),
+          total: values.total * 100,
+        };
         fetch('http://localhost:3000/api/invoices', {
           method: 'POST',
-          body: JSON.stringify(values, null, 2),
+          body: JSON.stringify(normalizedValues, null, 2),
           headers: {
             'Content-Type': 'application/json',
           },
         });
         actions.setSubmitting(false);
+        isFormOpenSet(!isFormOpen);
       }}
     >
       {(formik) => (

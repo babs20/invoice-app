@@ -6,7 +6,9 @@ interface IDatabaseScope {
   pgp: pgLib.IMain;
 }
 
-const pgp = require('pg-promise')();
+const pgp = require('pg-promise')({
+  capSQL: true,
+});
 
 const connectionString =
   process.env.DATABASE_URL ||

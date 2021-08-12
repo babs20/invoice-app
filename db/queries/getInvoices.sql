@@ -35,6 +35,6 @@ invoices.total
 FROM invoices
 JOIN clients ON clients.id = invoices.client_id
 JOIN users ON users.id = invoices.user_id
-JOIN items ON items.invoice_id = invoices.id
+LEFT JOIN items ON items.invoice_id = invoices.id
 WHERE invoices.user_id = 1
 GROUP BY invoices.id, clients.id, users.id;

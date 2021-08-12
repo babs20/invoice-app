@@ -18,9 +18,6 @@ export const InvoicesOverview = ({
   isFormOpenSet,
   invoices,
 }: InvoicesOverviewProps): JSX.Element => {
-  console.log(invoices);
-
-  // type InvoiceType = typeof data[0];
   type FilterType = {
     draft: boolean;
     pending: boolean;
@@ -105,7 +102,9 @@ export const InvoicesOverview = ({
               text="New"
               expandedText="Invoice"
               showCirclePlus
-              onClick={() => isFormOpenSet(!isFormOpen)}
+              onClick={() => {
+                isFormOpenSet(!isFormOpen);
+              }}
             />
           </div>
         </header>

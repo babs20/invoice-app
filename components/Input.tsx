@@ -30,7 +30,7 @@ export const Input = ({
         className="input__field"
         placeholder={placeholder}
         value={value}
-      />
+      ></Field>
     </div>
   );
 };
