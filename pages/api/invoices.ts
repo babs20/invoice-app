@@ -31,6 +31,8 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (method) {
     case 'GET':
+      console.log('IN GET');
+
       try {
         const { query } = sql('../../../../db/queries/getInvoices.sql');
         const invoices = await db.any(query);
@@ -46,6 +48,8 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }
       break;
     case 'POST':
+      console.log('IN POST');
+
       try {
         const { query: createClient } = sql(
           '../../../../db/queries/createClient.sql'
@@ -96,6 +100,24 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
         res.status(500);
       }
+      break;
+    case 'DELETE':
+      try {
+        console.log('IN DELETE');
+
+        const { query } = sql('../../../../db/queries/deleteInvoice.sql');
+        await db.none(query, [body.invoice_id]);
+
+        res.status(200).end();
+      } catch (e) {
+        if (e instanceof pgp.errors.QueryFileError) {
+          res.status(500);
+          console.log('QUERY FILE ISSUE: ', e);
+        }
+        res.status(500);
+        console.log(e);
+      }
+      break;
   }
 };
 

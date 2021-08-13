@@ -5,6 +5,7 @@ import { GetStaticProps, GetStaticPaths } from 'next';
 import InvoiceStatus from '../../components/InvoiceStatus';
 import Button from '../../components/Button';
 import { InvoiceType } from '../../utils/types';
+import { useRouter } from 'next/dist/client/router';
 
 interface ViewInvoiceProps {
   invoice: InvoiceType;
@@ -77,6 +78,22 @@ const InvoiceItemList = ({ items }: InvoiceItemList): JSX.Element => {
 };
 
 export const ViewInvoice = ({ invoice }: ViewInvoiceProps): JSX.Element => {
+  const router = useRouter();
+
+  const deleteInvoice = async (): Promise<void> => {
+    await fetch('http://localhost:3000/api/invoices', {
+      method: 'DELETE',
+      body: JSON.stringify({ invoice_id: invoice.id }, null, 2),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((res) => {
+      if (res.status === 200) {
+        router.push('/');
+      }
+    });
+  };
+
   return (
     <main className="view">
       <Link href="/">
@@ -101,7 +118,7 @@ export const ViewInvoice = ({ invoice }: ViewInvoiceProps): JSX.Element => {
         <InvoiceStatus showStatus status={invoice.status} />
         <div className="view__button-container">
           <Button isEdit text="Edit" />
-          <Button isDestructive text="Delete" />
+          <Button isDestructive text="Delete" onClick={() => deleteInvoice()} />
           <Button text="Mark as Paid" />
         </div>
       </header>

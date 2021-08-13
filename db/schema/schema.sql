@@ -50,8 +50,8 @@ CREATE TABLE "items" (
   "invoice_id" integer NOT NULL
 );
 
-ALTER TABLE "invoices" ADD FOREIGN KEY ("client_id") REFERENCES "clients" ("id");
+ALTER TABLE "invoices" ADD FOREIGN KEY ("client_id") REFERENCES "clients" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE "invoices" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+ALTER TABLE "invoices" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE "items" ADD FOREIGN KEY ("invoice_id") REFERENCES "invoices" ("id");
+ALTER TABLE "items" ADD FOREIGN KEY ("invoice_id") REFERENCES "invoices" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
