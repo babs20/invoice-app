@@ -5,6 +5,7 @@ $color-profile-border: hsl(231, 20%, 36%);
   position: relative;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 
   @include respond-to('l') {
     flex-direction: row;

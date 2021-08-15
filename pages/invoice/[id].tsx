@@ -1,11 +1,14 @@
 import dayjs from 'dayjs';
 import currency from 'currency.js';
+import classNames from 'classnames';
 import Link from 'next/link';
 import { GetStaticProps, GetStaticPaths } from 'next';
 import InvoiceStatus from '../../components/InvoiceStatus';
 import Button from '../../components/Button';
+import Modal from '../../components/Modal';
 import { InvoiceType } from '../../utils/types';
 import { useRouter } from 'next/dist/client/router';
+import { useState } from 'react';
 
 interface ViewInvoiceProps {
   invoice: InvoiceType;
@@ -78,6 +81,7 @@ const InvoiceItemList = ({ items }: InvoiceItemList): JSX.Element => {
 };
 
 export const ViewInvoice = ({ invoice }: ViewInvoiceProps): JSX.Element => {
+  const [isModalOpen, isModalOpenSet] = useState<boolean>(false);
   const router = useRouter();
 
   const deleteInvoice = async (): Promise<void> => {
@@ -95,84 +99,108 @@ export const ViewInvoice = ({ invoice }: ViewInvoiceProps): JSX.Element => {
   };
 
   return (
-    <main className="view">
-      <Link href="/">
-        <a className="view__go-back">
-          <svg
-            width="8"
-            height="10"
-            viewBox="0 0 8 10"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M6.11401 9.22754L1.88611 4.99964L6.11401 0.771736"
-              stroke="#7C5DFA"
-              strokeWidth="2"
-            />
-          </svg>
-          <span>Go back</span>
-        </a>
-      </Link>
-      <header className="view__header">
-        <InvoiceStatus showStatus status={invoice.status} />
-        <div className="view__button-container">
+    <>
+      <Modal isOpen={isModalOpen}>
+        <Button isEdit text="Cancel" onClick={() => isModalOpenSet(false)} />
+        <Button isDestructive text="Delete" onClick={() => deleteInvoice()} />
+      </Modal>
+      <main className="view">
+        <div>
+          <Link href="/">
+            <a className="view__go-back">
+              <svg
+                width="8"
+                height="10"
+                viewBox="0 0 8 10"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M6.11401 9.22754L1.88611 4.99964L6.11401 0.771736"
+                  stroke="#7C5DFA"
+                  strokeWidth="2"
+                />
+              </svg>
+              <span>Go back</span>
+            </a>
+          </Link>
+          <header className="view__header">
+            <InvoiceStatus showStatus status={invoice.status} />
+            <div
+              className="view__button-container
+            view__button-container--top"
+            >
+              <Button isEdit text="Edit" />
+              <Button
+                isDestructive
+                text="Delete"
+                onClick={() => isModalOpenSet(true)}
+              />
+              <Button text="Mark as Paid" />
+            </div>
+          </header>
+          <section className="view__details">
+            <div className="view__top-section">
+              <div className="view__id-description">
+                <h2 className="view__id">
+                  <span>#</span>
+                  {invoice.id}
+                </h2>
+                <span className="view__description">{invoice.description}</span>
+              </div>
+              <div className="view__address">
+                <p>
+                  {invoice.senderAddress.street} <br />
+                  {invoice.senderAddress.city} <br />
+                  {invoice.senderAddress.postCode} <br />
+                  {invoice.senderAddress.country}
+                </p>
+              </div>
+            </div>
+            <div className="view__invoice-info">
+              <div className="view__invoice-date">
+                <h2>Invoice Date</h2>
+                <span>{dayjs(invoice.createdAt).format('DD MMM YYYY')}</span>
+              </div>
+              <div className="view__bill-to">
+                <h2>Bill To</h2>
+                <span>{invoice.clientName}</span>
+                <p className="view__bill-to-address">
+                  {invoice.clientAddress.street} <br />
+                  {invoice.clientAddress.city} <br />
+                  {invoice.clientAddress.postCode} <br />
+                  {invoice.clientAddress.country}
+                </p>
+              </div>
+              <div className="view__payment-due">
+                <h2>Payment Due</h2>
+                <span>{dayjs(invoice.paymentDue).format('DD MMM YYYY')}</span>
+              </div>
+              <div className="view__sent-to">
+                <h2>Sent To</h2>
+                <span>{invoice.clientEmail}</span>
+              </div>
+            </div>
+            <InvoiceItemList items={invoice.items} />
+            <div className="view__items-total">
+              <span className="view__amount-due">Amount Due</span>
+              <span className="view__total">
+                {currency(invoice.total, { fromCents: true }).format()}
+              </span>
+            </div>
+          </section>
+        </div>
+        <div className="view__button-container view__button-container--bottom">
           <Button isEdit text="Edit" />
-          <Button isDestructive text="Delete" onClick={() => deleteInvoice()} />
+          <Button
+            isDestructive
+            text="Delete"
+            onClick={() => isModalOpenSet(true)}
+          />
           <Button text="Mark as Paid" />
         </div>
-      </header>
-      <section className="view__details">
-        <div className="view__top-section">
-          <div className="view__id-description">
-            <h2 className="view__id">
-              <span>#</span>
-              {invoice.id}
-            </h2>
-            <span className="view__description">{invoice.description}</span>
-          </div>
-          <div className="view__address">
-            <p>
-              {invoice.senderAddress.street} <br />
-              {invoice.senderAddress.city} <br />
-              {invoice.senderAddress.postCode} <br />
-              {invoice.senderAddress.country}
-            </p>
-          </div>
-        </div>
-        <div className="view__invoice-info">
-          <div className="view__invoice-date">
-            <h2>Invoice Date</h2>
-            <span>{dayjs(invoice.createdAt).format('DD MMM YYYY')}</span>
-          </div>
-          <div className="view__bill-to">
-            <h2>Bill To</h2>
-            <span>{invoice.clientName}</span>
-            <p className="view__bill-to-address">
-              {invoice.clientAddress.street} <br />
-              {invoice.clientAddress.city} <br />
-              {invoice.clientAddress.postCode} <br />
-              {invoice.clientAddress.country}
-            </p>
-          </div>
-          <div className="view__payment-due">
-            <h2>Payment Due</h2>
-            <span>{dayjs(invoice.paymentDue).format('DD MMM YYYY')}</span>
-          </div>
-          <div className="view__sent-to">
-            <h2>Sent To</h2>
-            <span>{invoice.clientEmail}</span>
-          </div>
-        </div>
-        <InvoiceItemList items={invoice.items} />
-        <div className="view__items-total">
-          <span className="view__amount-due">Amount Due</span>
-          <span className="view__total">
-            {currency(invoice.total, { fromCents: true }).format()}
-          </span>
-        </div>
-      </section>
-    </main>
+      </main>
+    </>
   );
 };
 

@@ -1,0 +1,74 @@
+$color-bg-black-transparent: hsla(0, 0%, 0%, 0.5);
+
+.modal {
+  display: none;
+  z-index: 2;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding-top: 5rem;
+  background-color: $color-bg-black-transparent;
+
+  &--open {
+    display: flex;
+  }
+
+  @include theme('color', $color-text-primary-dark, $color-text-primary);
+  @include typography-sm;
+  @include respond-to('l') {
+    padding: 0 0 0 103px;
+  }
+}
+
+.modal__box {
+  width: 327px;
+  height: min-content;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.100397);
+  @include theme('background-color', $color-primary-dark, $color-primary);
+
+  @include respond-to('m') {
+    width: 480px;
+    padding: 3rem;
+  }
+}
+
+.modal__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.42px;
+  line-height: 2rem;
+
+  @include respond-to('m') {
+    font-size: 1.5rem;
+    letter-spacing: -0.5px;
+  }
+}
+
+.modal__description {
+  margin-top: 0.5rem;
+  color: $color-bali-hai;
+  line-height: 22px;
+
+  @include respond-to('m') {
+    margin-top: 13px;
+  }
+}
+
+.modal__button-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+
+  & :not(:first-child) {
+    margin-left: 0.5rem;
+  }
+
+  @include respond-to('m') {
+    margin-top: 1rem;
+  }
+}

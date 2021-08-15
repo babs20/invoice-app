@@ -33,9 +33,15 @@ $color-items-bg: hsl(231, 67%, 99%);
 }
 
 .view {
-  & > * {
-    margin: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+
+  @include respond-to('m') {
+    display: block;
   }
+
   @include theme('color', $color-selago, $color-ship-cove);
   @include respond-to('l') {
     flex: 1;
@@ -48,7 +54,7 @@ $color-items-bg: hsl(231, 67%, 99%);
 .view__go-back {
   display: flex;
   align-items: center;
-  margin-top: 2rem;
+  margin: 2rem 1.5rem 0 1.5rem;
   font-weight: 700;
 
   // Inner Text
@@ -59,7 +65,7 @@ $color-items-bg: hsl(231, 67%, 99%);
 }
 
 .view__header {
-  margin-top: 2rem;
+  margin: 2rem 1.5rem 0 1.5rem;
   padding: 1.5rem;
   border-radius: 0.5rem;
   @include theme('background-color', $color-mirage, $color-white);
@@ -71,10 +77,6 @@ $color-items-bg: hsl(231, 67%, 99%);
 }
 
 .view__button-container {
-  display: flex;
-  position: absolute;
-  bottom: 0;
-  left: 0;
   align-items: center;
   justify-content: space-between;
   width: 100%;
@@ -91,18 +93,33 @@ $color-items-bg: hsl(231, 67%, 99%);
       margin-left: 0.5rem;
     }
   }
+
+  &--top {
+    display: none;
+
+    @include respond-to('m') {
+      display: flex;
+    }
+  }
+
+  &--bottom {
+    display: flex;
+
+    @include respond-to('m') {
+      display: none;
+    }
+  }
 }
 
 .view__details {
-  margin-top: 1rem;
-  margin-bottom: 151px;
+  margin: 1rem 1.5rem 3.5rem 1.5rem;
   padding: 1.5rem;
   border-radius: 0.5rem;
 
   @include theme('background-color', $color-mirage, $color-white);
   @include typography-sm;
   @include respond-to('m') {
-    margin-top: 1.5rem;
+    margin: 1.5rem 1.5rem 3.5rem 1.5rem;
     padding: 2rem;
   }
 
