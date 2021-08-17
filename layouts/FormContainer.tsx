@@ -1,122 +1,189 @@
+import { useEffect, useState, Dispatch, SetStateAction, useRef } from 'react';
+import { Formik, Form, FieldArray, FormikHelpers, FormikErrors } from 'formik';
+import dayjs from 'dayjs';
+import classNames from 'classnames';
+import * as Yup from 'yup';
 import DatePicker from '../components/DatePicker';
 import Input from '../components/Input';
 import Button from '../components/Button';
-import { Formik, Form, FieldArray, FormikHelpers } from 'formik';
-import { useEffect, useState, Dispatch, SetStateAction, useRef } from 'react';
-import classNames from 'classnames';
-import useClickOutside from '../hooks/useClickOutside';
-import dayjs from 'dayjs';
 import PaymentSelect from '../components/PaymentSelect';
+import useClickOutside from '../hooks/useClickOutside';
 import { ActionTypes, State, Action, InvoiceStatus } from '../utils/types';
 
 interface FormContainerProps {
   isFormOpen: boolean;
   isFormOpenSet: Dispatch<SetStateAction<boolean>>;
-  state: State;
   dispatch: React.Dispatch<Action>;
 }
 
+interface NewItemProps {
+  index: number;
+  nameVal: string;
+  quantityVal: number;
+  priceVal: number;
+  removeItem: () => void;
+  errors: FormikErrors<FormValues>;
+}
+interface FormValues {
+  id: string;
+  createdAt: string;
+  paymentDue: string;
+  description: string;
+  paymentTerms: 1 | 7 | 14 | 30;
+  clientName: string;
+  clientEmail: string;
+  status: InvoiceStatus | string;
+  senderAddress: {
+    street: string;
+    city: string;
+    postCode: string;
+    country: string;
+  };
+  clientAddress: {
+    street: string;
+    city: string;
+    postCode: string;
+    country: string;
+  };
+  items: {
+    name: string;
+    quantity: number;
+    price: number;
+    total: number;
+  }[];
+  total: number;
+}
+
+//TODO:
+// 1) Form Validation
+// FOR TESTING
+const intialValues: FormValues = {
+  id: '',
+  createdAt: dayjs().format('YYYY-MM-DD'),
+  paymentDue: dayjs().add(1, 'day').format('YYYY-MM-DD'),
+  description: 'Coding',
+  paymentTerms: 30,
+  clientName: 'John Doe',
+  clientEmail: 'doe@mail.com',
+  status: 'pending',
+  senderAddress: {
+    street: '123 Main Street',
+    city: 'New York',
+    postCode: '12345',
+    country: 'United States',
+  },
+  clientAddress: {
+    street: '19 Union Terrace',
+    city: 'London',
+    postCode: 'E1 3EZ',
+    country: 'United Kingdom',
+  },
+  items: [
+    {
+      name: 'Design',
+      quantity: 1,
+      price: 1550,
+      total: 1550,
+    },
+  ],
+  total: 1550,
+};
+
+// const intialValues: FormValues = {
+//   id: '',
+//   createdAt: '',
+//   paymentDue: dayjs().format('YYYY-MM-DD'),
+//   description: '',
+//   paymentTerms: 30,
+//   clientName: '',
+//   clientEmail: '',
+//   status: InvoiceStatus.PENDING,
+//   senderAddress: {
+//     street: '',
+//     city: '',
+//     postCode: '',
+//     country: '',
+//   },
+//   clientAddress: {
+//     street: '',
+//     city: '',
+//     postCode: '',
+//     country: '',
+//   },
+//   items: [
+//     {
+//       name: '',
+//       quantity: 0,
+//       price: 0,
+//       total: 0,
+//     },
+//   ],
+//   total: 0,
+// };
+
+const AddressSchema = Yup.object().shape({
+  street: Yup.string()
+    .max(255, "Street can't be longer than 255 characters")
+    .required("Street name can't be empty"),
+  city: Yup.string()
+    .max(255, "City can't be longer than 255 characters")
+    .required("City can't be empty"),
+  postCode: Yup.string()
+    .max(255, "Post code can't be longer than 255 characters")
+    .required("Post code can't be empty"),
+  country: Yup.string()
+    .max(255, "Country can't be longer than 255 characters")
+    .required("Country can't be empty"),
+});
+
+const ItemSchema = Yup.object().shape({
+  name: Yup.string()
+    .max(255, "Item name can't be longer than 255 characters")
+    .required("Item name can't be empty"),
+  quantity: Yup.number()
+    .min(1, "Quantity can't be less than one")
+    .max(2147483647, "Quantity can't be higher than 2,147,483,647")
+    .required("Quantity can't be empty"),
+  price: Yup.number()
+    .min(0, "Price can't be less than zero")
+    .max(
+      9223372036854775807,
+      "Item name can't be higher than 9,223,372,036,854,775,807"
+    )
+    .required("Price can't be empty"),
+});
+
+const InvoiceSchema = Yup.object().shape({
+  createdAt: Yup.date().required('Please enter a valid date'),
+  paymentDue: Yup.date().required('Please enter a valid date'),
+  description: Yup.string()
+    .max(255, "Description can't be longer than 255 characters")
+    .required("Description can't be empty"),
+  paymentTerms: Yup.mixed()
+    .oneOf([1, 7, 14, 30]) //Change to use Enum
+    .required('Must choose a payment term'),
+  clientName: Yup.string()
+    .max(255, "Client name can't be longer than 255 characters")
+    .required("Client name can't be empty"),
+  clientEmail: Yup.string()
+    .email('Must be a valid email')
+    .max(255, "Client email can't be longer than 255 characters")
+    .required("Client email can't be empty"),
+  status: Yup.mixed().oneOf([
+    InvoiceStatus.DRAFT,
+    InvoiceStatus.PAID,
+    InvoiceStatus.PENDING,
+  ]),
+  clientAddress: AddressSchema,
+  senderAddress: AddressSchema,
+  items: Yup.array().of(ItemSchema).required('Must have one item'),
+});
+
 export const FormContainer = ({
-  state,
   dispatch,
   isFormOpen,
   isFormOpenSet,
 }: FormContainerProps): JSX.Element => {
-  interface FormValues {
-    id: string;
-    createdAt: string;
-    paymentDue: string;
-    description: string;
-    paymentTerms: 1 | 7 | 14 | 30;
-    clientName: string;
-    clientEmail: string;
-    status: InvoiceStatus | string;
-    senderAddress: {
-      street: string;
-      city: string;
-      postCode: string;
-      country: string;
-    };
-    clientAddress: {
-      street: string;
-      city: string;
-      postCode: string;
-      country: string;
-    };
-    items: {
-      name: string;
-      quantity: number;
-      price: number;
-      total: number;
-    }[];
-    total: number;
-  }
-
-  // FOR TESTING
-  const intialValues: FormValues = {
-    id: '',
-    createdAt: dayjs().format('YYYY-MM-DD'),
-    paymentDue: dayjs().add(1, 'day').format('YYYY-MM-DD'),
-    description: 'Coding',
-    paymentTerms: 1,
-    clientName: 'John Doe',
-    clientEmail: 'doe@mail.com',
-    status: 'pending',
-    senderAddress: {
-      street: '123 Main Street',
-      city: 'New York',
-      postCode: '12345',
-      country: 'United States',
-    },
-    clientAddress: {
-      street: '19 Union Terrace',
-      city: 'London',
-      postCode: 'E1 3EZ',
-      country: 'United Kingdom',
-    },
-    items: [
-      {
-        name: 'Design',
-        quantity: 1,
-        price: 1550,
-        total: 1550,
-      },
-    ],
-    total: 1550,
-  };
-
-  // const intialValues: FormValues = {
-  //   id: '',
-  //   createdAt: '',
-  //   paymentDue: dayjs().format('YYYY-MM-DD'),
-  //   description: '',
-  //   paymentTerms: 0,
-  //   clientName: '',
-  //   clientEmail: '',
-  //   status: '',
-  //   senderAddress: {
-  //     street: '',
-  //     city: '',
-  //     postCode: '',
-  //     country: '',
-  //   },
-  //   clientAddress: {
-  //     street: '',
-  //     city: '',
-  //     postCode: '',
-  //     country: '',
-  //   },
-  //   items: [
-  //     {
-  //       name: '',
-  //       quantity: 0,
-  //       price: 0,
-  //       total: 0,
-  //     },
-  //   ],
-  //   total: 0,
-  // };
-
   const containerRef = useRef<HTMLFormElement>(null);
   useClickOutside(containerRef, isFormOpen, isFormOpenSet);
 
@@ -152,13 +219,62 @@ export const FormContainer = ({
     }
   }, [isScrolled]);
 
-  interface NewItemProps {
-    index: number;
-    nameVal: string;
-    quantityVal: number;
-    priceVal: number;
-    removeItem: () => void;
-  }
+  const formSubmit = async (
+    values: FormValues,
+    actions: FormikHelpers<FormValues>
+  ) => {
+    const items = values.items.map((item) => {
+      return {
+        ...item,
+        total: item.total * 100,
+        price: item.price * 100,
+      };
+    });
+
+    const normalizedValues = {
+      ...values,
+      id: Math.random().toString(36).substr(2, 6).toUpperCase(),
+      total: values.total * 100,
+    };
+
+    // await fetch('http://localhost:3000/api/invoices', {
+    //   method: 'POST',
+    //   body: JSON.stringify(normalizedValues, null, 2),
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    // })
+    //   .then((res) => {
+    //     return res.json();
+    //   })
+    //   .then(() => {
+    //     dispatch({
+    //       type: ActionTypes.AddInvoice,
+    //       payload: { addInvoice: { ...normalizedValues, items } },
+    //     });
+    //   });
+
+    console.log(normalizedValues);
+
+    actions.setSubmitting(false);
+    isFormOpenSet(!isFormOpen);
+  };
+
+  const scrollToBottom = (): void => {
+    const formContainer: HTMLDivElement | null = document.querySelector(
+      '.form__container'
+    );
+
+    // This is a bad way of doing this.
+    setTimeout(() => {
+      if (formContainer) {
+        formContainer.scroll({
+          top: formContainer.scrollHeight,
+          behavior: 'smooth',
+        });
+      }
+    }, 100);
+  };
 
   const NewItem = ({
     index,
@@ -166,7 +282,11 @@ export const FormContainer = ({
     quantityVal,
     priceVal,
     removeItem,
+    errors,
   }: NewItemProps): JSX.Element => {
+    const errorObj =
+      errors.items && typeof errors !== 'string' ? errors.items[index] : false;
+
     return (
       <div className="form__add-item">
         <Input
@@ -175,6 +295,8 @@ export const FormContainer = ({
           label="Item Name"
           value={nameVal}
           classes="form__item_name"
+          isInvalid={errorObj.name !== undefined}
+          errorMessage={errorObj.name}
         />
         <Input
           name={`items[${index}].quantity`}
@@ -183,6 +305,8 @@ export const FormContainer = ({
           classes="form__quantity"
           label="Qty."
           value={quantityVal}
+          isInvalid={errorObj.quantity !== undefined}
+          errorMessage={errorObj.quantity}
         />
         <Input
           name={`items[${index}].price`}
@@ -190,6 +314,8 @@ export const FormContainer = ({
           label="Price"
           value={priceVal}
           classes="form__price"
+          isInvalid={errorObj.price !== undefined}
+          errorMessage={errorObj.price}
         />
         <div className="form__item-total-container">
           <h3>Total</h3>
@@ -218,64 +344,10 @@ export const FormContainer = ({
     );
   };
 
-  const formSubmit = async (
-    values: FormValues,
-    actions: FormikHelpers<FormValues>
-  ) => {
-    const items = values.items.map((item) => {
-      return {
-        ...item,
-        total: item.total * 100,
-        price: item.price * 100,
-      };
-    });
-
-    const normalizedValues = {
-      ...values,
-      id: Math.random().toString(36).substr(2, 6).toUpperCase(),
-      total: values.total * 100,
-    };
-
-    await fetch('http://localhost:3000/api/invoices', {
-      method: 'POST',
-      body: JSON.stringify(normalizedValues, null, 2),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then(() => {
-        dispatch({
-          type: ActionTypes.AddInvoice,
-          payload: { addInvoice: { ...normalizedValues, items } },
-        });
-      });
-
-    actions.setSubmitting(false);
-    isFormOpenSet(!isFormOpen);
-  };
-
-  const scrollToBottom = (): void => {
-    const formContainer: HTMLDivElement | null = document.querySelector(
-      '.form__container'
-    );
-
-    // This is a bad way of doing this.
-    setTimeout(() => {
-      if (formContainer) {
-        formContainer.scroll({
-          top: formContainer.scrollHeight,
-          behavior: 'smooth',
-        });
-      }
-    }, 100);
-  };
-
   return (
     <Formik
       initialValues={intialValues}
+      validationSchema={InvoiceSchema}
       onSubmit={(values, actions) => formSubmit(values, actions)}
     >
       {(formik) => (
@@ -309,6 +381,8 @@ export const FormContainer = ({
                 placeholder="123 Main Street"
                 label="Street Address"
                 value={formik.values.senderAddress.street}
+                isInvalid={formik.errors.senderAddress?.street !== undefined}
+                errorMessage={formik.errors.senderAddress?.street}
               />
               <div className="form__location-container">
                 <Input
@@ -316,18 +390,26 @@ export const FormContainer = ({
                   label="City"
                   placeholder="City"
                   value={formik.values.senderAddress.city}
+                  isInvalid={formik.errors.senderAddress?.city !== undefined}
+                  errorMessage={formik.errors.senderAddress?.city}
                 />
                 <Input
                   name={'senderAddress.postCode'}
                   placeholder="12345"
                   label="Post Code"
                   value={formik.values.senderAddress.postCode}
+                  isInvalid={
+                    formik.errors.senderAddress?.postCode !== undefined
+                  }
+                  errorMessage={formik.errors.senderAddress?.postCode}
                 />
                 <Input
                   name="senderAddress.country"
                   placeholder="United States"
                   label="Country"
                   value={formik.values.senderAddress.country}
+                  isInvalid={formik.errors.senderAddress?.country !== undefined}
+                  errorMessage={formik.errors.senderAddress?.country}
                 />
               </div>
             </fieldset>
@@ -338,6 +420,8 @@ export const FormContainer = ({
                 placeholder="Alex Grim"
                 label="Client's Name"
                 value={formik.values.clientName}
+                isInvalid={formik.errors.clientName !== undefined}
+                errorMessage={formik.errors.clientName}
               />
               <Input
                 name="clientEmail"
@@ -345,12 +429,16 @@ export const FormContainer = ({
                 type="email"
                 label="Client's Email"
                 value={formik.values.clientEmail}
+                isInvalid={formik.errors.clientEmail !== undefined}
+                errorMessage={formik.errors.clientEmail}
               />
               <Input
                 name="clientAddress.street"
                 placeholder="123 Main Street"
                 label="Street Address"
                 value={formik.values.clientAddress.street}
+                isInvalid={formik.errors.clientAddress?.street !== undefined}
+                errorMessage={formik.errors.clientAddress?.street}
               />
               <div className="form__location-container">
                 <Input
@@ -358,18 +446,26 @@ export const FormContainer = ({
                   placeholder="City"
                   label="City"
                   value={formik.values.clientAddress.city}
+                  isInvalid={formik.errors.clientAddress?.city !== undefined}
+                  errorMessage={formik.errors.clientAddress?.city}
                 />
                 <Input
                   name="clientAddress.postCode"
                   placeholder="12345"
                   label="Post Code"
                   value={formik.values.clientAddress.postCode}
+                  isInvalid={
+                    formik.errors.clientAddress?.postCode !== undefined
+                  }
+                  errorMessage={formik.errors.clientAddress?.postCode}
                 />
                 <Input
                   name="clientAddress.country"
                   placeholder="United States"
                   label="Country"
                   value={formik.values.clientAddress.country}
+                  isInvalid={formik.errors.clientAddress?.country !== undefined}
+                  errorMessage={formik.errors.clientAddress?.country}
                 />
               </div>
               <div className="form__invoice-info">
@@ -380,6 +476,8 @@ export const FormContainer = ({
                   placeholder="Graphic Design"
                   label="Project Description"
                   value={formik.values.description}
+                  isInvalid={formik.errors.description !== undefined}
+                  errorMessage={formik.errors.description}
                 />
               </div>
             </fieldset>
@@ -397,6 +495,7 @@ export const FormContainer = ({
                         priceVal={item.price}
                         index={index}
                         removeItem={() => arrayHelpers.remove(index)}
+                        errors={formik.errors}
                       />
                     );
                   })}

@@ -15,9 +15,34 @@
   @include theme('background-color', $color-mirage, $color-white);
   @include typography-sm;
   @include theme('color', $color-text-primary-dark, $color-text-primary);
+
+  &--invalid {
+    border: 1px solid;
+    @include theme('border-color', $color-burnt-sienna, $color-burnt-sienna);
+  }
+}
+
+.input__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .input__label {
   @include typography-sm;
   @include theme('color', $color-selago, $color-ship-cove);
+
+  &--invalid {
+    @include theme('color', $color-burnt-sienna, $color-burnt-sienna);
+  }
+}
+
+.input__error-message {
+  display: none;
+  color: $color-burnt-sienna;
+  @include typography-sm;
+
+  &--show {
+    display: inline-block;
+  }
 }
