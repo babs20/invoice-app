@@ -237,24 +237,22 @@ export const FormContainer = ({
       total: values.total * 100,
     };
 
-    // await fetch('http://localhost:3000/api/invoices', {
-    //   method: 'POST',
-    //   body: JSON.stringify(normalizedValues, null, 2),
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    // })
-    //   .then((res) => {
-    //     return res.json();
-    //   })
-    //   .then(() => {
-    //     dispatch({
-    //       type: ActionTypes.AddInvoice,
-    //       payload: { addInvoice: { ...normalizedValues, items } },
-    //     });
-    //   });
-
-    console.log(normalizedValues);
+    await fetch('http://localhost:3000/api/invoices', {
+      method: 'POST',
+      body: JSON.stringify(normalizedValues, null, 2),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then(() => {
+        dispatch({
+          type: ActionTypes.AddInvoice,
+          payload: { addInvoice: { ...normalizedValues, items } },
+        });
+      });
 
     actions.setSubmitting(false);
     isFormOpenSet(!isFormOpen);

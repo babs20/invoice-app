@@ -4,6 +4,7 @@ import currency from 'currency.js';
 import Filter from '../components/Filter';
 import Button from '../components/Button';
 import Invoice from '../components/Invoice';
+import NoInvoiceSVG from '../components/svg/NoInvoiceSVG';
 import FormContainer from '../layouts/FormContainer';
 import {
   InvoiceArrType,
@@ -85,6 +86,8 @@ export const InvoicesOverview = ({
 
   const subHeadingText = (isMobile: boolean): string => {
     const numOfInvoices = filterResults(checked).length;
+    if (numOfInvoices === 0) return 'No invoices';
+
     const verb = numOfInvoices > 1 ? 'are' : 'is';
     const invoiceQuantity = numOfInvoices > 1 ? 'invoices' : 'invoice';
 
@@ -110,7 +113,6 @@ export const InvoicesOverview = ({
       <FormContainer
         isFormOpen={isFormOpen}
         isFormOpenSet={isFormOpenSet}
-        state={state}
         dispatch={dispatch}
       />
       <main className="overview">
@@ -134,23 +136,38 @@ export const InvoicesOverview = ({
             />
           </div>
         </header>
-        <section className="overview__invoice-section">
-          {filterResults(checked).map(
-            ({ id, status, paymentDue, clientName, total }) => {
-              return (
-                <Invoice
-                  key={id}
-                  id={id}
-                  status={status}
-                  paymentDue={paymentDue}
-                  clientName={clientName}
-                  total={currency(total, { fromCents: true }).format()}
-                  href={`/invoice/${id}`}
-                />
-              );
-            }
-          )}
-        </section>
+        {filterResults(checked).length ? (
+          <section className="overview__invoice-section">
+            {filterResults(checked).map(
+              ({ id, status, paymentDue, clientName, total }) => {
+                return (
+                  <Invoice
+                    key={id}
+                    id={id}
+                    status={status}
+                    paymentDue={paymentDue}
+                    clientName={clientName}
+                    total={currency(total, { fromCents: true }).format()}
+                    href={`/invoice/${id}`}
+                  />
+                );
+              }
+            )}
+          </section>
+        ) : (
+          <div className="overview__no-invoice">
+            <NoInvoiceSVG />
+            <h2>There is nothing here</h2>
+            <p className="overview__no-invoice--small-text">
+              Create an invoice by clicking the <strong>New</strong> button and
+              get started
+            </p>
+            <p className="overview__no-invoice--large-text">
+              Create a new invoice by clicking the <strong>New Invoice</strong>{' '}
+              button and get started
+            </p>
+          </div>
+        )}
       </main>
     </>
   );
