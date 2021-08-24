@@ -1,17 +1,24 @@
 import dayjs from 'dayjs';
 import currency from 'currency.js';
-import classNames from 'classnames';
 import Link from 'next/link';
 import { GetStaticProps, GetStaticPaths } from 'next';
 import InvoiceStatus from '../../components/InvoiceStatus';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
-import { InvoiceType } from '../../utils/types';
+import FormContainer from '../../layouts/FormContainer';
+import {
+  InvoiceType,
+  Action,
+  InvoiceStatus as InvoiceStatusEnum,
+} from '../../utils/types';
 import { useRouter } from 'next/dist/client/router';
-import { useState } from 'react';
+import { useState, Dispatch, SetStateAction } from 'react';
 
 interface ViewInvoiceProps {
-  invoice: InvoiceType;
+  initialInvoiceState: InvoiceType;
+  isFormOpen: boolean;
+  isFormOpenSet: Dispatch<SetStateAction<boolean>>;
+  dispatch: React.Dispatch<Action>;
 }
 
 interface Item {
@@ -80,12 +87,18 @@ const InvoiceItemList = ({ items }: InvoiceItemList): JSX.Element => {
   );
 };
 
-export const ViewInvoice = ({ invoice }: ViewInvoiceProps): JSX.Element => {
+export const ViewInvoice = ({
+  initialInvoiceState,
+  isFormOpen,
+  isFormOpenSet,
+  dispatch,
+}: ViewInvoiceProps): JSX.Element => {
+  const [invoice, invoiceSet] = useState<InvoiceType>(initialInvoiceState);
   const [isModalOpen, isModalOpenSet] = useState<boolean>(false);
   const router = useRouter();
 
-  const deleteInvoice = async (): Promise<void> => {
-    await fetch('http://localhost:3000/api/invoices', {
+  const deleteInvoice = (): void => {
+    fetch('http://localhost:3000/api/invoices', {
       method: 'DELETE',
       body: JSON.stringify({ invoice_id: invoice.id }, null, 2),
       headers: {
@@ -98,9 +111,40 @@ export const ViewInvoice = ({ invoice }: ViewInvoiceProps): JSX.Element => {
     });
   };
 
+  const updateInvoiceStatus = (): void => {
+    const updateStatusValues = {
+      statusOnly: true,
+      invoice_id: invoice.id,
+      status: InvoiceStatusEnum.PAID,
+    };
+    fetch('http://localhost:3000/api/invoices', {
+      method: 'PUT',
+      body: JSON.stringify(updateStatusValues, null, 2),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          invoiceSet((prev) => {
+            return { ...prev, status: InvoiceStatusEnum.PAID };
+          });
+          console.log(res);
+        }
+      })
+      .catch((e) => console.log(e));
+  };
+
   return (
     <>
-      <Modal isOpen={isModalOpen}>
+      <FormContainer
+        isEdit={true}
+        isFormOpen={isFormOpen}
+        isFormOpenSet={isFormOpenSet}
+        dispatch={dispatch}
+        values={invoice}
+      />
+      <Modal isOpen={isModalOpen} invoiceId={invoice.id}>
         <Button isEdit text="Cancel" onClick={() => isModalOpenSet(false)} />
         <Button isDestructive text="Delete" onClick={() => deleteInvoice()} />
       </Modal>
@@ -130,13 +174,22 @@ export const ViewInvoice = ({ invoice }: ViewInvoiceProps): JSX.Element => {
               className="view__button-container
             view__button-container--top"
             >
-              <Button isEdit text="Edit" />
+              <Button
+                isEdit
+                text="Edit"
+                onClick={() => isFormOpenSet(!isFormOpen)}
+              />
               <Button
                 isDestructive
                 text="Delete"
                 onClick={() => isModalOpenSet(true)}
               />
-              <Button text="Mark as Paid" />
+              {invoice.status === InvoiceStatusEnum.PENDING && (
+                <Button
+                  text="Mark as Paid"
+                  onClick={() => updateInvoiceStatus()}
+                />
+              )}
             </div>
           </header>
           <section className="view__details">
@@ -221,7 +274,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 
   return {
-    props: { invoice },
+    props: { initialInvoiceState: invoice },
   };
 };
 

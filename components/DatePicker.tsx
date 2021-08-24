@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDatePicker from 'react-datepicker';
 import dayjs from 'dayjs';
 import { useFormikContext, useField } from 'formik';
+import classNames from 'classnames';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -68,13 +69,24 @@ const CustomHeader = ({
   );
 };
 
-const DatePicker = ({ name }: { name: string }): JSX.Element => {
+const DatePicker = ({
+  name,
+  isDisabled = false,
+}: {
+  name: string;
+  isDisabled: boolean;
+}): JSX.Element => {
   const { setFieldValue } = useFormikContext();
   const [field] = useField(name);
   return (
     <div className="datepicker">
       <div className="datepicker__input-container">
-        <label htmlFor="datepicker" className="datepicker__input-label">
+        <label
+          htmlFor="datepicker"
+          className={classNames('datepicker__input-label', {
+            'datepicker__input-label--isDisabled': isDisabled,
+          })}
+        >
           Issue Date
         </label>
         <ReactDatePicker
@@ -84,7 +96,9 @@ const DatePicker = ({ name }: { name: string }): JSX.Element => {
           onChange={(val) => {
             setFieldValue(field.name, dayjs(val as Date).format('YYYY-MM-DD'));
           }}
-          className="datepicker__input"
+          className={classNames('datepicker__input', {
+            'datepicker__input--isDisabled': isDisabled,
+          })}
           calendarClassName="datepicker__dialogbox"
           weekDayClassName={() => 'datepicker__day-names'}
           dayClassName={() => 'datepicker__date-button'}
@@ -100,6 +114,7 @@ const DatePicker = ({ name }: { name: string }): JSX.Element => {
           showPopperArrow={false}
           onFocus={(e) => (e.target.readOnly = true)}
           dropdownMode="scroll"
+          disabled={isDisabled}
         />
       </div>
     </div>

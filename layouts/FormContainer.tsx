@@ -1,19 +1,35 @@
 import { useEffect, useState, Dispatch, SetStateAction, useRef } from 'react';
-import { Formik, Form, FieldArray, FormikHelpers, FormikErrors } from 'formik';
+import {
+  Formik,
+  Form,
+  FieldArray,
+  FormikHelpers,
+  FormikErrors,
+  FormikTouched,
+} from 'formik';
 import dayjs from 'dayjs';
 import classNames from 'classnames';
 import * as Yup from 'yup';
+import currency from 'currency.js';
 import DatePicker from '../components/DatePicker';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import PaymentSelect from '../components/PaymentSelect';
 import useClickOutside from '../hooks/useClickOutside';
-import { ActionTypes, State, Action, InvoiceStatus } from '../utils/types';
+import {
+  ActionTypes,
+  Action,
+  InvoiceStatus,
+  InvoiceType,
+  InvoiceArrType,
+} from '../utils/types';
 
 interface FormContainerProps {
   isFormOpen: boolean;
   isFormOpenSet: Dispatch<SetStateAction<boolean>>;
   dispatch: React.Dispatch<Action>;
+  isEdit: boolean;
+  values: InvoiceType;
 }
 
 interface NewItemProps {
@@ -23,6 +39,7 @@ interface NewItemProps {
   priceVal: number;
   removeItem: () => void;
   errors: FormikErrors<FormValues>;
+  touched: FormikTouched<FormValues>;
 }
 interface FormValues {
   id: string;
@@ -57,68 +74,36 @@ interface FormValues {
 //TODO:
 // 1) Form Validation
 // FOR TESTING
-const intialValues: FormValues = {
-  id: '',
-  createdAt: dayjs().format('YYYY-MM-DD'),
-  paymentDue: dayjs().add(1, 'day').format('YYYY-MM-DD'),
-  description: 'Coding',
-  paymentTerms: 30,
-  clientName: 'John Doe',
-  clientEmail: 'doe@mail.com',
-  status: 'pending',
-  senderAddress: {
-    street: '123 Main Street',
-    city: 'New York',
-    postCode: '12345',
-    country: 'United States',
-  },
-  clientAddress: {
-    street: '19 Union Terrace',
-    city: 'London',
-    postCode: 'E1 3EZ',
-    country: 'United Kingdom',
-  },
-  items: [
-    {
-      name: 'Design',
-      quantity: 1,
-      price: 1550,
-      total: 1550,
-    },
-  ],
-  total: 1550,
-};
-
 // const intialValues: FormValues = {
-//   id: '',
-//   createdAt: '',
-//   paymentDue: dayjs().format('YYYY-MM-DD'),
-//   description: '',
+//   id: 'XM9141',
+//   createdAt: dayjs().format('YYYY-MM-DD'),
+//   paymentDue: dayjs().add(1, 'day').format('YYYY-MM-DD'),
+//   description: 'Coding',
 //   paymentTerms: 30,
-//   clientName: '',
-//   clientEmail: '',
-//   status: InvoiceStatus.PENDING,
+//   clientName: 'John Doe',
+//   clientEmail: 'doe@mail.com',
+//   status: 'pending',
 //   senderAddress: {
-//     street: '',
-//     city: '',
-//     postCode: '',
-//     country: '',
+//     street: '123 Main Street',
+//     city: 'New York',
+//     postCode: '12345',
+//     country: 'United States',
 //   },
 //   clientAddress: {
-//     street: '',
-//     city: '',
-//     postCode: '',
-//     country: '',
+//     street: '19 Union Terrace',
+//     city: 'London',
+//     postCode: 'E1 3EZ',
+//     country: 'United Kingdom',
 //   },
 //   items: [
 //     {
-//       name: '',
-//       quantity: 0,
-//       price: 0,
-//       total: 0,
+//       name: 'Design',
+//       quantity: 1,
+//       price: 1550,
+//       total: 1550,
 //     },
 //   ],
-//   total: 0,
+//   total: 1550,
 // };
 
 const AddressSchema = Yup.object().shape({
@@ -141,10 +126,12 @@ const ItemSchema = Yup.object().shape({
     .max(255, "Item name can't be longer than 255 characters")
     .required("Item name can't be empty"),
   quantity: Yup.number()
+    .typeError('Price must be a number')
     .min(1, "Quantity can't be less than one")
     .max(2147483647, "Quantity can't be higher than 2,147,483,647")
     .required("Quantity can't be empty"),
   price: Yup.number()
+    .typeError('Price must be a number')
     .min(0, "Price can't be less than zero")
     .max(
       9223372036854775807,
@@ -183,12 +170,54 @@ export const FormContainer = ({
   dispatch,
   isFormOpen,
   isFormOpenSet,
+  isEdit = false,
+  values,
 }: FormContainerProps): JSX.Element => {
+  const intialValues: FormValues = {
+    id: values?.id || '',
+    createdAt: values?.createdAt || dayjs().format('YYYY-MM-DD'),
+    paymentDue:
+      dayjs().add(values?.paymentTerms, 'day').format('YYYY-MM-DD') ||
+      dayjs().add(30, 'day').format('YYYY-MM-DD'),
+    description: values?.description || '',
+    paymentTerms: values?.paymentTerms || 30,
+    clientName: values?.clientName || '',
+    clientEmail: values?.clientEmail || '',
+    status: values?.status || InvoiceStatus.PENDING,
+    senderAddress: {
+      street: values?.senderAddress.street || '',
+      city: values?.senderAddress.city || '',
+      postCode: values?.senderAddress.postCode || '',
+      country: values?.senderAddress.country || '',
+    },
+    clientAddress: {
+      street: values?.clientAddress.street || '',
+      city: values?.clientAddress.city || '',
+      postCode: values?.clientAddress.postCode || '',
+      country: values?.clientAddress.country || '',
+    },
+    items: values?.items.map((item) => {
+      return {
+        ...item,
+        price: (item.price / 100).toFixed(2),
+      };
+    }) || [
+      {
+        name: '',
+        quantity: 0,
+        price: 0,
+        total: 0,
+      },
+    ],
+    total: values?.total || 0,
+  };
+
   const containerRef = useRef<HTMLFormElement>(null);
   useClickOutside(containerRef, isFormOpen, isFormOpenSet);
 
   // Change class when scrolled to bottom
   const [isScrolled, isScrolledSet] = useState<boolean>(false);
+  const [isDraft, isDraftSet] = useState<boolean>(false);
   useEffect(() => {
     const formContainer: HTMLDivElement | null = document.querySelector(
       '.form__container'
@@ -222,7 +251,7 @@ export const FormContainer = ({
   const formSubmit = async (
     values: FormValues,
     actions: FormikHelpers<FormValues>
-  ) => {
+  ): Promise<void> => {
     const items = values.items.map((item) => {
       return {
         ...item,
@@ -234,6 +263,8 @@ export const FormContainer = ({
     const normalizedValues = {
       ...values,
       id: Math.random().toString(36).substr(2, 6).toUpperCase(),
+      paymentDue: dayjs().add(values.paymentTerms, 'day').format('YYYY-MM-DD'),
+      status: isDraft ? InvoiceStatus.DRAFT : InvoiceStatus.PENDING,
       total: values.total * 100,
     };
 
@@ -253,6 +284,50 @@ export const FormContainer = ({
           payload: { addInvoice: { ...normalizedValues, items } },
         });
       });
+
+    actions.setSubmitting(false);
+    isFormOpenSet(!isFormOpen);
+  };
+
+  const editInvoice = async (
+    values: FormValues,
+    actions: FormikHelpers<FormValues>
+  ): Promise<void> => {
+    const items = values.items.map((item) => {
+      return {
+        ...item,
+        total: item.price * item.quantity * 100,
+        price: item.price * 100,
+      };
+    });
+
+    const editedInvoice: InvoiceType = {
+      ...values,
+      items,
+      total: Number(values.total),
+    };
+
+    console.log(editedInvoice);
+
+    await fetch('http://localhost:3000/api/invoices', {
+      method: 'PUT',
+      body: JSON.stringify(
+        {
+          ...editedInvoice,
+          statusOnly: false,
+        },
+        null,
+        2
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then(() => {
+      dispatch({
+        type: ActionTypes.AddInvoice,
+        payload: { addInvoice: editedInvoice },
+      });
+    });
 
     actions.setSubmitting(false);
     isFormOpenSet(!isFormOpen);
@@ -281,6 +356,7 @@ export const FormContainer = ({
     priceVal,
     removeItem,
     errors,
+    touched,
   }: NewItemProps): JSX.Element => {
     const errorObj =
       errors.items && typeof errors !== 'string' ? errors.items[index] : false;
@@ -293,8 +369,9 @@ export const FormContainer = ({
           label="Item Name"
           value={nameVal}
           classes="form__item_name"
-          isInvalid={errorObj.name !== undefined}
-          errorMessage={errorObj.name}
+          isInvalid={errorObj?.name !== undefined}
+          errorMessage={errorObj?.name}
+          isTouched={touched.items && touched.items[index]?.name}
         />
         <Input
           name={`items[${index}].quantity`}
@@ -303,8 +380,9 @@ export const FormContainer = ({
           classes="form__quantity"
           label="Qty."
           value={quantityVal}
-          isInvalid={errorObj.quantity !== undefined}
-          errorMessage={errorObj.quantity}
+          isInvalid={errorObj?.quantity !== undefined}
+          errorMessage={errorObj?.quantity}
+          isTouched={touched.items && touched.items[index]?.quantity}
         />
         <Input
           name={`items[${index}].price`}
@@ -312,14 +390,18 @@ export const FormContainer = ({
           label="Price"
           value={priceVal}
           classes="form__price"
-          isInvalid={errorObj.price !== undefined}
-          errorMessage={errorObj.price}
+          isInvalid={errorObj?.price !== undefined}
+          errorMessage={errorObj?.price}
+          type="number"
+          isTouched={touched.items && touched.items[index]?.price}
         />
         <div className="form__item-total-container">
           <h3>Total</h3>
           <div className="form__item-amount-container">
             <span className="form__item-amount">$</span>
-            <span className="form__item-amount">{priceVal * quantityVal}</span>
+            <span className="form__item-amount">
+              {(priceVal * quantityVal).toFixed(2)}
+            </span>
             <button type="button" onClick={removeItem}>
               <svg
                 width="13"
@@ -346,7 +428,9 @@ export const FormContainer = ({
     <Formik
       initialValues={intialValues}
       validationSchema={InvoiceSchema}
-      onSubmit={(values, actions) => formSubmit(values, actions)}
+      onSubmit={(values, actions) =>
+        isEdit ? editInvoice(values, actions) : formSubmit(values, actions)
+      }
     >
       {(formik) => (
         <div className={classNames('form', { 'form--is-open': isFormOpen })}>
@@ -355,7 +439,11 @@ export const FormContainer = ({
             onSubmit={formik.handleSubmit}
             ref={containerRef}
           >
-            <div className="form__go-back">
+            <button
+              className="form__go-back"
+              type="button"
+              onClick={() => isFormOpenSet(!isFormOpen)}
+            >
               <svg
                 width="8"
                 height="10"
@@ -370,8 +458,17 @@ export const FormContainer = ({
                 />
               </svg>
               <span>Go back</span>
-            </div>
-            <h2 className="form__title">New Invoice</h2>
+            </button>
+            <h2 className="form__title">
+              {isEdit ? (
+                <>
+                  Edit <span className="form__hash">#</span>
+                  {formik.values.id}
+                </>
+              ) : (
+                'New Invoice'
+              )}
+            </h2>
             <fieldset className="form__fieldset">
               <legend className="form__section-title">Bill From</legend>
               <Input
@@ -381,6 +478,7 @@ export const FormContainer = ({
                 value={formik.values.senderAddress.street}
                 isInvalid={formik.errors.senderAddress?.street !== undefined}
                 errorMessage={formik.errors.senderAddress?.street}
+                isTouched={formik.touched.senderAddress?.street}
               />
               <div className="form__location-container">
                 <Input
@@ -390,6 +488,7 @@ export const FormContainer = ({
                   value={formik.values.senderAddress.city}
                   isInvalid={formik.errors.senderAddress?.city !== undefined}
                   errorMessage={formik.errors.senderAddress?.city}
+                  isTouched={formik.touched.senderAddress?.city}
                 />
                 <Input
                   name={'senderAddress.postCode'}
@@ -400,6 +499,7 @@ export const FormContainer = ({
                     formik.errors.senderAddress?.postCode !== undefined
                   }
                   errorMessage={formik.errors.senderAddress?.postCode}
+                  isTouched={formik.touched.senderAddress?.postCode}
                 />
                 <Input
                   name="senderAddress.country"
@@ -408,6 +508,7 @@ export const FormContainer = ({
                   value={formik.values.senderAddress.country}
                   isInvalid={formik.errors.senderAddress?.country !== undefined}
                   errorMessage={formik.errors.senderAddress?.country}
+                  isTouched={formik.touched.senderAddress?.country}
                 />
               </div>
             </fieldset>
@@ -420,6 +521,7 @@ export const FormContainer = ({
                 value={formik.values.clientName}
                 isInvalid={formik.errors.clientName !== undefined}
                 errorMessage={formik.errors.clientName}
+                isTouched={formik.touched.clientName}
               />
               <Input
                 name="clientEmail"
@@ -429,6 +531,7 @@ export const FormContainer = ({
                 value={formik.values.clientEmail}
                 isInvalid={formik.errors.clientEmail !== undefined}
                 errorMessage={formik.errors.clientEmail}
+                isTouched={formik.touched.clientEmail}
               />
               <Input
                 name="clientAddress.street"
@@ -437,6 +540,7 @@ export const FormContainer = ({
                 value={formik.values.clientAddress.street}
                 isInvalid={formik.errors.clientAddress?.street !== undefined}
                 errorMessage={formik.errors.clientAddress?.street}
+                isTouched={formik.touched.clientAddress?.street}
               />
               <div className="form__location-container">
                 <Input
@@ -446,6 +550,7 @@ export const FormContainer = ({
                   value={formik.values.clientAddress.city}
                   isInvalid={formik.errors.clientAddress?.city !== undefined}
                   errorMessage={formik.errors.clientAddress?.city}
+                  isTouched={formik.touched.clientAddress?.city}
                 />
                 <Input
                   name="clientAddress.postCode"
@@ -456,6 +561,7 @@ export const FormContainer = ({
                     formik.errors.clientAddress?.postCode !== undefined
                   }
                   errorMessage={formik.errors.clientAddress?.postCode}
+                  isTouched={formik.touched.clientAddress?.postCode}
                 />
                 <Input
                   name="clientAddress.country"
@@ -464,10 +570,11 @@ export const FormContainer = ({
                   value={formik.values.clientAddress.country}
                   isInvalid={formik.errors.clientAddress?.country !== undefined}
                   errorMessage={formik.errors.clientAddress?.country}
+                  isTouched={formik.touched.clientAddress?.country}
                 />
               </div>
               <div className="form__invoice-info">
-                <DatePicker name="createdAt" />
+                <DatePicker name="createdAt" isDisabled={isEdit} />
                 <PaymentSelect name="paymentTerms" />
                 <Input
                   name="description"
@@ -476,6 +583,7 @@ export const FormContainer = ({
                   value={formik.values.description}
                   isInvalid={formik.errors.description !== undefined}
                   errorMessage={formik.errors.description}
+                  isTouched={formik.touched.description}
                 />
               </div>
             </fieldset>
@@ -492,8 +600,12 @@ export const FormContainer = ({
                         quantityVal={item.quantity}
                         priceVal={item.price}
                         index={index}
-                        removeItem={() => arrayHelpers.remove(index)}
+                        removeItem={() =>
+                          formik.values.items.length > 1 &&
+                          arrayHelpers.remove(index)
+                        }
                         errors={formik.errors}
+                        touched={formik.touched}
                       />
                     );
                   })}
@@ -518,19 +630,42 @@ export const FormContainer = ({
                 'form__button-container--scrolled': isScrolled,
               })}
             >
-              <div className="form__discard">
-                <Button
-                  text="Discard"
-                  isEdit
-                  onClick={() => isFormOpenSet(!isFormOpen)}
-                />
-              </div>
-              <div className="form__draft">
-                <Button text="Save as Draft" isSaveAsDraft />
-              </div>
-              <div className="form__save">
-                <Button text="Save &amp; Send" type="submit" />
-              </div>
+              {isEdit ? (
+                <div className="form__buttons--edit">
+                  <div>
+                    <Button
+                      text="Cancel"
+                      isEdit
+                      onClick={() => {
+                        isFormOpenSet(!isFormOpen);
+                        formik.handleReset();
+                      }}
+                    />
+                  </div>
+                  <div className="form__save">
+                    <Button text="Save Changes" type="submit" />
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="form__discard">
+                    <Button
+                      text="Discard"
+                      isEdit
+                      onClick={() => {
+                        isFormOpenSet(!isFormOpen);
+                        formik.handleReset();
+                      }}
+                    />
+                  </div>
+                  <div className="form__draft">
+                    <Button text="Save as Draft" isSaveAsDraft type="submit" />
+                  </div>
+                  <div className="form__save">
+                    <Button text="Save &amp; Send" type="submit" />
+                  </div>
+                </>
+              )}
             </div>
           </Form>
         </div>

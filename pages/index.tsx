@@ -111,6 +111,7 @@ export const InvoicesOverview = ({
   return (
     <>
       <FormContainer
+        isEdit={false}
         isFormOpen={isFormOpen}
         isFormOpenSet={isFormOpenSet}
         dispatch={dispatch}

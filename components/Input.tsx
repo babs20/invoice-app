@@ -9,6 +9,7 @@ interface InputProps {
   label: string;
   isInvalid?: boolean;
   errorMessage?: string;
+  isTouched: boolean | undefined;
 }
 
 export const Input = ({
@@ -20,6 +21,7 @@ export const Input = ({
   label,
   isInvalid,
   errorMessage = 'Invalid input',
+  isTouched,
 }: InputProps): JSX.Element => {
   const inputClasses = classNames(`input${classes ? ' ' + classes : ''}`);
 
@@ -28,29 +30,36 @@ export const Input = ({
       <div className="input__header">
         <label
           className={classNames('input__label', {
-            'input__label--invalid': isInvalid,
+            'input__label--invalid': isTouched && isInvalid,
           })}
           htmlFor={name}
         >
           {label}
         </label>
-        <span
+        {/* <span
           className={classNames('input__error-message', {
-            'input__error-message--show': isInvalid,
+            'input__error-message--show': isTouched && isInvalid,
           })}
         >
           {errorMessage}
-        </span>
+        </span> */}
       </div>
       <Field
         name={name}
         type={type}
         className={classNames('input__field', {
-          'input__field--invalid': isInvalid,
+          'input__field--invalid': isTouched && isInvalid,
         })}
         placeholder={placeholder}
         value={value}
       ></Field>
+      <span
+        className={classNames('input__error-message', {
+          'input__error-message--show': isTouched && isInvalid,
+        })}
+      >
+        {errorMessage}
+      </span>
     </div>
   );
 };

@@ -54,14 +54,14 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const { query: createClient } = sql(
           '../../../../db/queries/createClient.sql'
         );
-        const { query: putInvoice } = sql(
-          '../../../../db/queries/putInvoice.sql'
+        const { query: insertInvoice } = sql(
+          '../../../../db/queries/insertInvoice.sql'
         );
 
         await db
           .tx(async (t) => {
             const client = await t.any(createClient, { ...body });
-            const invoice = await t.any(putInvoice, {
+            const invoice = await t.any(insertInvoice, {
               ...body,
               clientId: client[0].id,
             });
@@ -92,6 +92,68 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             res.status(500);
             console.log(e);
           });
+      } catch (e) {
+        if (e instanceof pgp.errors.QueryFileError) {
+          console.log('QUERY FILE ISSUE: ', e);
+        } else {
+          console.log(e);
+        }
+        res.status(500);
+      }
+      break;
+    case 'PUT':
+      console.log('IN UPDATE');
+
+      try {
+        if (body.statusOnly === true) {
+          const { query } = sql('../../../../db/queries/putInvoiceStatus.sql');
+
+          await db.any(query, [body.invoice_id, body.status]);
+
+          res.status(200).end();
+        } else {
+          const { query: putClient } = sql(
+            '../../../../db/queries/putClient.sql'
+          );
+          const { query: putInvoice } = sql(
+            '../../../../db/queries/putInvoice.sql'
+          );
+          const { query: putItems } = sql(
+            '../../../../db/queries/putInvoice.sql'
+          );
+
+          await db.tx(async (t) => {
+            const invoice = await t.any(putInvoice, {
+              ...body,
+            });
+
+            await t.none(putClient, {
+              ...body,
+              clientId: invoice[0].client_id,
+            });
+
+            const itemsFromInvoice: ItemsType = body.items.map((item: Item) => {
+              return {
+                ...item,
+                price: item.price,
+                invoice_id: invoice[0].id,
+              };
+            });
+
+            const itemsQuery =
+              pgp.helpers.update(
+                itemsFromInvoice,
+                ['name', 'quantity', 'price', 'invoice_id'],
+                'items'
+              ) + `WHERE t.invoice_id = ${invoice[0].id};`;
+
+            await t.none(itemsQuery);
+
+            res.status(200).end();
+          });
+
+          res.status(200).end();
+        }
       } catch (e) {
         if (e instanceof pgp.errors.QueryFileError) {
           console.log('QUERY FILE ISSUE: ', e);
