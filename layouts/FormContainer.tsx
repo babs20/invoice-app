@@ -71,41 +71,6 @@ interface FormValues {
   total: number;
 }
 
-//TODO:
-// 1) Form Validation
-// FOR TESTING
-// const intialValues: FormValues = {
-//   id: 'XM9141',
-//   createdAt: dayjs().format('YYYY-MM-DD'),
-//   paymentDue: dayjs().add(1, 'day').format('YYYY-MM-DD'),
-//   description: 'Coding',
-//   paymentTerms: 30,
-//   clientName: 'John Doe',
-//   clientEmail: 'doe@mail.com',
-//   status: 'pending',
-//   senderAddress: {
-//     street: '123 Main Street',
-//     city: 'New York',
-//     postCode: '12345',
-//     country: 'United States',
-//   },
-//   clientAddress: {
-//     street: '19 Union Terrace',
-//     city: 'London',
-//     postCode: 'E1 3EZ',
-//     country: 'United Kingdom',
-//   },
-//   items: [
-//     {
-//       name: 'Design',
-//       quantity: 1,
-//       price: 1550,
-//       total: 1550,
-//     },
-//   ],
-//   total: 1550,
-// };
-
 const AddressSchema = Yup.object().shape({
   street: Yup.string()
     .max(255, "Street can't be longer than 255 characters")
